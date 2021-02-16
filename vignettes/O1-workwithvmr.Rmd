@@ -1,0 +1,56 @@
+---
+title: "1- Working with vmr package"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{1- Working with vmr package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# The __vmr__ package
+
+## Presentation
+
+The __vmr__ package allow you to manage __virtual environment__ with and for __R__.  
+You can develop, run tests, build packages binaries easily in a clean environment with R pre-installed and configured.  
+
+It uses [Vagrant](https://www.vagrantup.com/) tool to manage this virtual environments, call _boxes_. A __box__ is a Vagrant environment (bundle) containing a __virtual environment_ (such as a virtual machine) for a specific __provider__ (such as [VirtualBox](https://www.virtualbox.org/)).    
+Official __vmr__ boxes list is available here :  [https://app.vagrantup.com/VMR/](https://app.vagrantup.com/VMR/)  
+
+> Boxes are available for development and test, do not use it for production.
+
+## Dependencies
+
+The __vmr__ package needs two tools to work __Vagrant__ to manage boxes and a __provider__ to instantiate the virtual environment.  
+* __Vagrant__ (>= 2.2.0) : download and install from [https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/downloads.html).  
+* A __provider__, currently only [VirtualBox](https://www.virtualbox.org/) (>= 6.1.14) is available in __vmr__ boxes. Install it.
+
+## Install
+
+From CRAN:  
+```
+install.packages(c('vmr'))
+```
+
+From in development repository:
+```
+remotes::install_git('https://gitlab.com/rstuff/vmr.git')
+```
+
+# Go further
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+
+### Next vignette : [2-Start my first environment](O2-vmrFirstStep.html)

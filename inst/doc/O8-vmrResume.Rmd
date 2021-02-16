@@ -1,0 +1,124 @@
+---
+title: "8- vmr package functions resume"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{8- vmr package functions resume}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+## List available boxes
+```{r eval=FALSE}
+list_boxes <- vmrList()
+print(list_boxes)
+```
+## Get box information
+```{r eval=FALSE}
+vmrListBox("boxname")
+```
+
+## Create a __vmr__ environment
+```{r eval=FALSE}
+vmr_env <- vmrCreate(name = "boxname")
+```
+
+## Get providers options:
+```{r eval=FALSE}
+vb.options <- getProviderOptions(provider="virtualbox")
+vb.options
+```
+
+## Initialize __vmr__ environment
+```{r eval=FALSE}
+vmrInitEnv(vmr_env)
+```
+
+## Load an already initialized __vmr__ environment
+```{r eval=FALSE}
+setwd("/path/to/vmr/environment/")
+vmr_env <- vmrLoad()
+```
+
+## Start __vmr__ environment
+```{r eval=FALSE}
+vmrStart()
+```
+## __vmr__ environment Status:
+```{r eval=FALSE}
+vmrStatus()
+```
+
+## Get Guest informations:
+```{r eval=FALSE}
+vmrInfo()
+```
+
+## Save and stop the environment:
+```{r eval=FALSE}
+vmrSuspend()
+```
+
+## Resume an environment previously suspended:
+```{r eval=FALSE}
+vmrResume()
+```
+
+## Stop a __vmr__ environment
+```{r eval=FALSE}
+vmrStop()
+```
+
+## Remove a __vmr__ environment
+```{r eval=FALSE}
+vmrDestroy()
+```
+
+## Update R packages 
+```{r eval=FALSE}
+vmrUpdatePackages()
+```
+
+## Install R packages 
+```{r eval=FALSE}
+vmrInstallPackages(c("vmr"))
+```
+
+## Run R commands 
+```{r eval=FALSE}
+vmrExec(cmd=c("print(Hello World !"))
+```
+
+## Test R package
+```{r eval=FALSE}
+vmrPackageTest(pkg = "./")
+```
+
+## Check R package
+```{r eval=FALSE}
+vmrPackageCheck(pkg = "./")
+```
+
+## Build R package
+```{r eval=FALSE}
+vmrPackageBuild(pkg = "./")
+```
+
+## Send files and run bash commands 
+```{r eval=FALSE}
+vmrProvision(elts = c("myscript.sh"), cmd=c("ls","./myscript.sh"))
+```
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+

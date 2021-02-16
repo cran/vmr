@@ -1,0 +1,80 @@
+---
+title: "4- Manage vmr boxes"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{4- Manage vmr boxes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# The __vmr__ boxes
+
+## Presentation
+
+A __box__ is a Vagrant environment (bundle) containing a virtual environment (such as a virtual machine) for a specific provider (such as [VirtualBox](https://www.virtualbox.org/)).  
+
+> Boxes are available for development and test, do not use it for production.  
+
+Once a box is downloaded, it saved in _~/.vagrand.d/_ directory.  
+
+> Be careful boxes can be large in space, be sure to have enough hard drive space.
+
+## List boxes
+
+Official __vmr__ boxes list is available here :  [https://app.vagrantup.com/VMR/](https://app.vagrantup.com/VMR/)  
+
+__vmr__ boxes are identify by :  
+
+* a name: <the OS name and version>-R
+* a version: <R version>.<timestamp>
+* a provider: provider name (default virtualbox)
+* a description: for information
+
+To get this list in R console:
+```{r eval=FALSE}
+boxes_list <- vmrList()
+boxes_list
+```
+
+To get information about a specific box:  
+```{r eval=FALSE}
+vmrListBox(boxes_list$Name[1])
+```
+
+## Download a box
+
+Box download is automatic in a __vmr__ environement, but if you need to download it manualy, you can:  
+```{r eval=FALSE}
+vmrBoxDownload(vmr_env)
+```
+
+## Manage boxes
+
+You can manage downloaded boxes with this functions:  
+
+```{r eval=FALSE}
+# List downloaded boxes
+vmrLocalBoxList()
+# Remove old boxes (not up to date)
+vmrLocalBoxPrune()
+# Remove a specific box
+vmrLocalBoxRemove(<box name>)
+# Download the last box version (use in a __vmr__ environment)
+vmrLocalBoxUpdate()
+```
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : 5-[Manage providers](O5-vmrManageProviders.html)

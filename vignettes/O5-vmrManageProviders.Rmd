@@ -1,0 +1,56 @@
+---
+title: "5- Manage vmr Providers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{5- Manage vmr Providers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# The __vmr__ Providers
+
+## Presentation
+
+__vmr__ providers are "tools" that manage the virtual machines instances such as _VirtualBox_ (default in __vmr__), _docker_, _vmware_, _aws_, _openstack_, ...  
+
+Actually only _VirtualBox_ is available in __vmr__ package.
+
+## VirtualBox provider
+
+__vmr__ can manage some of virtualbox options.  
+Options available can be find here:
+```{r eval=FALSE}
+vb.opt <- virtualboxOptions(details = FALSE)
+```
+
+To set a name to the virtualbox machine:  
+```{r eval=FALSE}
+vb.opt$name <- "My Virtualbox name"
+```
+
+To disable GUI:  
+```{r eval=FALSE}
+vb.opt$gui <- FALSE
+```
+
+To add more cpus and memory:  
+```{r eval=FALSE}
+vb.opt$modifyvm$cpus <- 3
+vb.opt$modifiy$memory <- 8192
+```
+
+More options can be find here [https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm](https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)  
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : [6-Development](O6-vmrDev.html)

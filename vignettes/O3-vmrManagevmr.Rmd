@@ -1,0 +1,133 @@
+---
+title: "3- Manage vmr environment"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{3- Manage vmr environment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+## Clarification
+
+A __vmr__ environment consist of a __directory__ and a template file call __Vagrantfile__.  
+A _vmr_ object contains information to create and modify an __vmr__ environment.  Once the environment created and initialized the _vmr_ object became optional and only the __working directory__ and the __Vagrantfile__ are the managers.
+
+## Create a __vmr__ environment
+
+### Create a _vmr_ object
+
+```{r eval=FALSE}
+vmr_env <- vmrCreate(<boxname>)
+```
+
+_vmrCreate()_ function create a _vmr_ object using several arguments:  
+* name : the box name (from _vmrList()_)  
+* provider: the provider name (from _vmrList()_)  
+* version: (optional by default latest version is use)  
+* provider.options: specific provider options (vignette n°5)  
+
+### Load a _vmr_ object
+
+Set the working directory to a __vmr__ environment who was already initialized.  
+
+```{r, eval=FALSE}
+setwd("path/to/my/vmr/environment/")
+vmr_env <- vmrLoad()
+vmr_env
+```
+
+## Initialize a __vmr__ environment
+
+Initialize a __vmr__ environment will create a _Vagrantfile_ template into the working directory and download the box associated.
+
+> The box download can be long depending of the box size and network bandwide. The box is save in vagrant environment ("~/.vagrant.d/").  
+
+```{r eval=FALSE}
+vmr_env # created or loaded object
+# force.vagrantfile will override existing Vagrantfile template
+vmr_env <- vmrInitEnv(vmr_env, force.vagrantfile=TRUE)
+```
+
+### Clean a __vmr__ environment
+
+To remove any file created, boxes downloaded and provider instance run this commands:
+
+```{r eval=FALSE}
+vmr_env <- vmrLoad()
+# provider cleaning
+vmrDestroy(vmr_env$id)
+# box cleaning
+vmrLocalBoxRemove(vmr_env$box, provider = vmr_env$provider, version = vmr_env$version)
+# remove the working directory
+```
+
+## Add options to vmr environment
+
+Several functions need and can modify a _vmr_ object to add options to the environment.  
+_vmrInitEnv()_ have to be recall at _vmr_ object modification.
+
+### Upgrade environment
+
+It's possible to upgrade an environment to use the latest box version.  
+
+```{r eval=FALSE}
+vmr_env <- vmrUpdateEnvVersion(vmr_env)
+```
+
+### Shared files
+
+To share a host directory to the guest.   
+```{r eval=FALSE}
+vmr_env <- vmrMountDir(vmr_env, src = "/" , dest = "/" )
+```
+
+## Manipulate a __vmr__ environment
+
+This functions manage the environment instance.  
+They have to be call in __vmr__ environment (working directory), with no arguments.  
+
+```{r eval=FALSE}
+# Get environment status
+vmrStatus()
+# Start a provider instance
+vmrStart()
+# Save state and stop provider instance
+vmrSuspend()
+# Resume a saved provider instance
+vmrResume()
+# Stop a provider instance
+vmrStop()
+# Remove a provider instance
+vmrDestroy()
+```
+
+### Snapshot
+
+Manage provider instance with snapshot.  
+
+```{r eval=FALSE}
+# Take a snapshot
+vmrTakeSnapshot("my snapshot")
+# resume a snapshot
+vmrRestoreSnapshot("my snapshot")
+# list snapshots
+vmrListSnapshot()
+```
+
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : [4-Manage Boxes](O4-vmrManageBoxes.html)

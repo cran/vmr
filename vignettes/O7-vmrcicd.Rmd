@@ -1,0 +1,46 @@
+---
+title: "7- Use vmr for CI/CD"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{7- Use vmr for CI/CD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# CI/CD
+
+You can set up a __vmr__ environment to use it in CI/CD pipelines.
+
+Once you set up your __vmr__ environment take a snapshot of it.
+
+```{r eval=FALSE}
+vmrTakeSnapshot("cicdversionR")
+```
+
+## GitLab Runner CI/CD
+
+Then you can get the command to run, to add it as a GitLab Runner:
+```{r eval=FALSE}
+virtualboxGitlabRunner(vmr_env,
+                       gitlab_url = "gitlab.com",
+                       gt_token = "<mytoken>",
+                       snapshot_name = "cicdversionR",
+                       vm_name = <VirtualBox VM Name>)
+```
+Copy and paste the return command in a terminal where GitLab Runner and the __vmr__ environment are installed.
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : [8- Functions resume](O8-vmrResume.html)

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>3- Manage vmr environment</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">3- Manage vmr environment</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#clarification">Clarification</a></li>
+<li><a href="#create-a-vmr-environment">Create a <strong>vmr</strong> environment</a></li>
+<li><a href="#initialize-a-vmr-environment">Initialize a <strong>vmr</strong> environment</a></li>
+<li><a href="#add-options-to-vmr-environment">Add options to vmr environment</a></li>
+<li><a href="#manipulate-a-vmr-environment">Manipulate a <strong>vmr</strong> environment</a></li>
+<li><a href="#vignette-summary">Vignette summary</a></li>
+</ul>
+</div>
+
+<div id="clarification" class="section level2">
+<h2>Clarification</h2>
+<p>A <strong>vmr</strong> environment consist of a <strong>directory</strong> and a template file call <strong>Vagrantfile</strong>.<br />
+A <em>vmr</em> object contains information to create and modify an <strong>vmr</strong> environment. Once the environment created and initialized the <em>vmr</em> object became optional and only the <strong>working directory</strong> and the <strong>Vagrantfile</strong> are the managers.</p>
+</div>
+<div id="create-a-vmr-environment" class="section level2">
+<h2>Create a <strong>vmr</strong> environment</h2>
+<div id="create-a-vmr-object" class="section level3">
+<h3>Create a <em>vmr</em> object</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="op">&lt;</span>boxname<span class="op">&gt;</span>)</span></code></pre></div>
+<p><em>vmrCreate()</em> function create a <em>vmr</em> object using several arguments:<br />
+* name : the box name (from <em>vmrList()</em>)<br />
+* provider: the provider name (from <em>vmrList()</em>)<br />
+* version: (optional by default latest version is use)<br />
+* provider.options: specific provider options (vignette n°5)</p>
+</div>
+<div id="load-a-vmr-object" class="section level3">
+<h3>Load a <em>vmr</em> object</h3>
+<p>Set the working directory to a <strong>vmr</strong> environment who was already initialized.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">setwd</span>(<span class="st">&quot;path/to/my/vmr/environment/&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</span>
+<span id="cb2-3"><a href="#cb2-3"></a>vmr_env</span></code></pre></div>
+</div>
+</div>
+<div id="initialize-a-vmr-environment" class="section level2">
+<h2>Initialize a <strong>vmr</strong> environment</h2>
+<p>Initialize a <strong>vmr</strong> environment will create a <em>Vagrantfile</em> template into the working directory and download the box associated.</p>
+<blockquote>
+<p>The box download can be long depending of the box size and network bandwide. The box is save in vagrant environment (“~/.vagrant.d/”).</p>
+</blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>vmr_env <span class="co"># created or loaded object</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># force.vagrantfile will override existing Vagrantfile template</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env, <span class="dt">force.vagrantfile=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div id="clean-a-vmr-environment" class="section level3">
+<h3>Clean a <strong>vmr</strong> environment</h3>
+<p>To remove any file created, boxes downloaded and provider instance run this commands:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># provider cleaning</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">vmrDestroy</span>(vmr_env<span class="op">$</span>id)</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># box cleaning</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">vmrLocalBoxRemove</span>(vmr_env<span class="op">$</span>box, <span class="dt">provider =</span> vmr_env<span class="op">$</span>provider, <span class="dt">version =</span> vmr_env<span class="op">$</span>version)</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># remove the working directory</span></span></code></pre></div>
+</div>
+</div>
+<div id="add-options-to-vmr-environment" class="section level2">
+<h2>Add options to vmr environment</h2>
+<p>Several functions need and can modify a <em>vmr</em> object to add options to the environment.<br />
+<em>vmrInitEnv()</em> have to be recall at <em>vmr</em> object modification.</p>
+<div id="upgrade-environment" class="section level3">
+<h3>Upgrade environment</h3>
+<p>It’s possible to upgrade an environment to use the latest box version.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrUpdateEnvVersion</span>(vmr_env)</span></code></pre></div>
+</div>
+<div id="shared-files" class="section level3">
+<h3>Shared files</h3>
+<p>To share a host directory to the guest.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrMountDir</span>(vmr_env, <span class="dt">src =</span> <span class="st">&quot;/&quot;</span> , <span class="dt">dest =</span> <span class="st">&quot;/&quot;</span> )</span></code></pre></div>
+</div>
+</div>
+<div id="manipulate-a-vmr-environment" class="section level2">
+<h2>Manipulate a <strong>vmr</strong> environment</h2>
+<p>This functions manage the environment instance.<br />
+They have to be call in <strong>vmr</strong> environment (working directory), with no arguments.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Get environment status</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">vmrStatus</span>()</span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co"># Start a provider instance</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="kw">vmrStart</span>()</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Save state and stop provider instance</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">vmrSuspend</span>()</span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># Resume a saved provider instance</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="kw">vmrResume</span>()</span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co"># Stop a provider instance</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="kw">vmrStop</span>()</span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># Remove a provider instance</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="kw">vmrDestroy</span>()</span></code></pre></div>
+<div id="snapshot" class="section level3">
+<h3>Snapshot</h3>
+<p>Manage provider instance with snapshot.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Take a snapshot</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co"># resume a snapshot</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="kw">vmrRestoreSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># list snapshots</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">vmrListSnapshot</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="vignette-summary" class="section level2">
+<h2>Vignette summary</h2>
+<ol style="list-style-type: decimal">
+<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong> package</a></li>
+<li><a href="O2-vmrFirstStep.html">Start my first environment</a></li>
+<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong> environment</a></li>
+<li><a href="O4-vmrManageBoxes.html">Manage boxes</a></li>
+<li><a href="O5-vmrManageProviders.html">Manage providers</a></li>
+<li><a href="O6-vmrDev.html">Development with <strong>vmr</strong></a></li>
+<li><a href="O7-vmrcicd.html">CI/CD</a></li>
+<li><a href="O8-vmrResume.html">Functions resume</a></li>
+</ol>
+<div id="next-vignette-4-manage-boxes" class="section level3">
+<h3>Next vignette : <a href="O4-vmrManageBoxes.html">4-Manage Boxes</a></h3>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

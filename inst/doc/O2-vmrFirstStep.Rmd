@@ -1,0 +1,99 @@
+---
+title: "2- vmr package first step"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{2- vmr package first step}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# To Start
+
+```{r echo=TRUE, eval=FALSE}
+#install.packages(c('vmr'))
+library(vmr)
+vmrSetVerbose("Full")
+```
+
+## List available environment (boxes)
+
+Boxes are listed from [https://app.vagrantup.com/VMR/](https://app.vagrantup.com/VMR/).   
+Mainly you've got the OS, the R version installed (follow by a timestamp) and the provider available.  
+
+```{r eval=FALSE}
+list_boxes <- vmrList()
+print(list_boxes)
+```
+
+## Create a __vmr__ object
+
+To create a minimal __vmr__ object you need the _name_ and the _provider_ of a box (default _version_ is "_latest_").  
+
+```{r eval=FALSE}
+index <- which(list_boxes$Name == "LinuxMint20-R")[1]
+vmr_env <- vmrCreate(name = list_boxes$Name[index], provider = list_boxes$Provider[1])
+vmr_env
+```
+
+## Initialize the __vmr__ environment
+
+> Environment configuration depend of a directory (the _working directory_) and a file template call _Vagrantfile_.  
+This function have to be re-call if __vmr\_env__ object is modified.  
+When initializing environment the box with same name, version and provider, will be download once. It can be long depending of the box size and network bandwide. The box is save in vagrant environment ("~/.vagrant.d/").   
+
+```{r eval=FALSE}
+vmr_env <- vmrInitEnv(vmr_env)
+```
+
+> Note : when __vmr__ environment is initialize, no more need to recreate _vmr\_env_ for further use (unless for specific case). Use __vmrLoad()__ in that case to recreate the __vmr__ object _vmr\_env_.  
+
+## Start __vmr__ environment
+
+To start an environment:  
+> This start the virtual environment using the __vmr directory__ and the __Vagrantfile template__.  
+__Be sure to always be in the same working directory.__
+
+```{r eval=FALSE}
+vmrStart()
+```
+
+Now enjoy using R console, the virtual environment GUI or both.
+
+To get vmr Status:
+```{r eval=FALSE}
+vmrStatus()
+```
+
+## Stop __vmr__ environment
+
+To save the current state and stop the environment:
+```{r eval=FALSE}
+vmrSuspend()
+```
+
+To resume an environment previously suspended:
+```{r eval=FALSE}
+vmrResume()
+```
+
+To stop the environment (_powerOff_):
+```{r eval=FALSE}
+vmrStop()
+```
+
+# Vignettes summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : [3-Manage __vmr__ environment](O3-vmrManagevmr.html)

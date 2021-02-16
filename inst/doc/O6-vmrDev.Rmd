@@ -1,0 +1,74 @@
+---
+title: "6- Use vmr for development"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{6- Use vmr for development}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+# Develop using __vmr__ package
+
+__vmr__ environment are clean and setup with R  (and some with R-devel), Rtools and some dependencies.
+
+You can use the GUI or use __vmr__ functions to execute commands.
+
+## Information
+
+To get guest information:
+```{r eval=FALSE}
+vmrInfo()
+```
+
+To send files to guest:  
+```{r eval=FALSE}
+vmrSend(c("myfile1","myfile2"))
+```
+
+To send and/or run bash commands :
+```{r eval=FALSE}
+vmrProvision(cmd = c("./myscript.sh"), elts = c("myscript.sh"), dest = "/home/vmr/")
+```
+
+## Run R commands
+
+To execute a R command to guest:
+```{r eval=FALSE}
+vmrExec(c('print("HelloWorld")'))
+```
+
+To update and install R packages in guest:
+```{r eval=FALSE}
+vmrUpdatePackages()
+vmrInstallPackages(pkg = c("vmr"))
+```
+
+
+
+## Package development
+
+With __vmr__ you can test, and build a package in development using this functions:  
+
+To build, check and test:  
+```{r eval=FALSE}
+# check a local package
+vmrPackageCheck()
+# Test it
+vmrPackageTest()
+# and create archive and package binary
+vmrPackageBuild()
+```
+
+## Vignette summary
+
+1. [Working with __vmr__ package](O1-workwithvmr.html)
+2. [Start my first environment](O2-vmrFirstStep.html)
+3. [Manage __vmr__ environment](O3-vmrManagevmr.html)
+4. [Manage boxes](O4-vmrManageBoxes.html)
+5. [Manage providers](O5-vmrManageProviders.html)
+6. [Development with __vmr__](O6-vmrDev.html)
+7. [CI/CD](O7-vmrcicd.html)
+8. [Functions resume](O8-vmrResume.html)
+
+### Next vignette : [7-CI/CD](O7-vmrcicd.html)

@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+	config.vm.box = "VMR/FakeBox"
+	config.vm.synced_folder "./", "/vmr"
+	config.vm.synced_folder ".", "/vagrant", disabled: true
+	config.vm.define "vmr-FakeBox-virtualbox" do |d|
+	end
+	config.ssh.username ="vmr"
+	config.ssh.password ="vmr"
+	config.ssh.keep_alive = true
+	config.vm.provider "virtualbox" do |vb|
+		vb.gui = true
+		vb.linked_clone = false
+		vb.check_guest_additions = true
+		vb.customize ["modifyvm", :id, "--cpus", "2"]
+		vb.customize ["modifyvm", :id, "--memory", "4096"]
+	end
+end
