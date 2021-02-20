@@ -53,17 +53,18 @@ vagrantExec2 <- function(args = character(), stdout = "", stderr = "") {
 # @return execution code (0 if OK) otherwise cmd output if stdout and/or stderr is TRUE
 vagrantExec <- function(args = character(), stdout = "", stderr = "") {
   out <- -1
-  printVerbose(2, "Execute:", "'vagrant ", paste(args, collapse = " "), "'")
-  if(vmr_env$verbose_mode == 0 && stdout != TRUE) stdout <- FALSE
-  if(stderr != TRUE && (vmr_env$verbose_mode == 0 || vmr_env$verbose_mode ==1) )
+  printVerbose(2, "Execute: '", vmr_env$vagrant_bin, " ", paste(args, collapse = " "), "'")
+  if (vmr_env$verbose_mode == 0 && stdout != TRUE) stdout <- FALSE
+  if (stderr != TRUE && (vmr_env$verbose_mode == 0 || vmr_env$verbose_mode == 1)) {
     stderr <- FALSE
-  
-  out <- system2("vagrant", args, stdout = stdout, stderr = stderr)
+  }
 
-  if( !is.null(attr(out, "status")) ) {
+  out <- system2(vmr_env$vagrant_bin, args, stdout = stdout, stderr = stderr)
+
+  if (!is.null(attr(out, "status"))) {
     warning("vmr ==> vagrant command may went wrong!\n vmr ==> output : \n", out)
   }
-  
+
   return(invisible(out))
 }
 
@@ -158,12 +159,12 @@ vagrantBoxAdd <- function(name, version = "latest", provider = "virtualbox", for
 # @return a data.frame with boxes information (name, provider and version)
 vagrantBoxPrune <- function() {
   printVerbose(2, "Boxes before pruning\n", vagrantBoxList())
-  
+
   args <- c("box", "prune", "--force", "--keep-active-boxes")
   vagrantExec(args)
   printVerbose(2, "Boxes keeped after pruning\n")
   boxes <- vagrantBoxList()
-  printVerbose(2,boxes)
+  printVerbose(2, boxes)
   return(boxes)
 }
 
@@ -238,14 +239,15 @@ vagrantStatus <- function() {
   args <- c(args, "--machine-readable")
   res <- vagrantExec(args, stdout = TRUE)
 
-  if( is.character(res) ) {
+  if (is.character(res)) {
     vagrantName <- strsplit(res[1], split = ",")[[1]][2]
     provider <- strsplit(res[2], split = ",")[[1]][4]
     state <- strsplit(res[4], split = ",")[[1]][4]
     return(list(vagrantName = vagrantName, provider = provider, state = state))
   }
-  else return(list())
-  
+  else {
+    return(list())
+  }
 }
 
 # @title get global-status of Vagrant environment
@@ -257,12 +259,12 @@ vagrantGlobalStatus <- function() {
   args <- c("global-status", "--prune") # , "--machine-readable")
   res <- vagrantExec(args, stdout = TRUE)
 
-  if( is.character(res) ) {
+  if (is.character(res)) {
     col_name <- strsplit(res[1], split = "[ ]+")[[1]]
-  
+
     global_status <- data.frame(matrix(ncol = length(col_name), nrow = 0))
-  
-    if( !identical(res, integer(0)) ){
+
+    if (!identical(res, integer(0))) {
       trash <- lapply(res[3:(which(res == " ") - 1)], FUN = function(vm) {
         global_status <<- rbind(global_status, strsplit(vm, split = "[ ]+")[[1]])
       })
@@ -270,7 +272,7 @@ vagrantGlobalStatus <- function() {
     colnames(global_status) <- col_name
     return(global_status)
   }
-  
+
   return(data.frame())
 }
 
@@ -283,8 +285,10 @@ vagrantGlobalStatus <- function() {
 # @return the id or ""
 vagrantGetID <- function(name = "", path = "") {
   res <- vagrantGlobalStatus()
-  if(length(res) == 0) return("")
-  
+  if (length(res) == 0) {
+    return("")
+  }
+
   if (name != "" && path != "") {
     ind <- which(res$name == name & res$directory == path)
     if (length(ind) == 1) {
@@ -306,7 +310,7 @@ vagrantGetID <- function(name = "", path = "") {
     }
   }
 
-  #warning("Can't determine environment ID")
+  # warning("Can't determine environment ID")
   return("")
 }
 
@@ -329,44 +333,50 @@ vagrantProvision <- function() {
 # @title Check if vagrant is installed and up to date.
 # @name vagrantIsInstalled
 # @description try to run vagrant and get version
-# @return Vagrant version or nothing
+# @return vagrant binary path and version or empty characters
 vagrantIsInstalled <- function() {
+  where_is_vagrant <- Sys.which("vagrant")
+  version <- ""
   out <- ""
-  tryCatch(
-    {
-      out <- system2("which", args = c("vagrant"), stdout = TRUE, stderr = TRUE)
-    },
-    error = function(cond) {
-      message(
-        "Vagrant seems not to be installed.\n",
-        "Please visit the page below and download and install vagrant: \n",
-        "https://www.vagrantup.com/downloads.html\n"
-      )
-    },
-    warning = function(cond) {
-      message(
-        "Vagrant seems not to be installed.\n",
-        "Please visit the page below and download and install vagrant: \n",
-        "https://www.vagrantup.com/downloads.html\n"
-      )
-    },
-    finally = {
-    }
-  )
 
-  if (!identical(grep("vagrant", out), integer(0))) {
-    out <- system2("vagrant", args = c("--version"), stdout = TRUE, stderr = TRUE)
-    if (!identical(grep("Vagrant", out), integer(0))) {
-      pos_value <- regexpr("[0-9\\.]+", out)
-      out <- substr(out, pos_value, pos_value + attr(pos_value, "match.length"))
+  # if can't find vagrant  try 'which' sys call
+  if (!nzchar(where_is_vagrant)) {
+    out <- tryCatch(
+      {
+        # if (.Platform$OS.type == "windows") {
+        #   system2("where", args = c("vagrant"), stdout = TRUE, stderr = FALSE)
+        # }else {}
+        system2("which", args = c("vagrant"), stdout = TRUE, stderr = FALSE)
+      },
+      error = function(cond) {},
+      warning = function(cond) {},
+      finally = {}
+    )
+
+    # 'which' return vagrant path and binary exists ?
+    if (!is.null(out) && grepl("vagrant", out[1]) && file.exists(out[1])) where_is_vagrant <- out[1]
+  }
+
+  if (nzchar(where_is_vagrant)) {
+    names(where_is_vagrant) <- NULL
+    out <- suppressWarnings(try(system2(where_is_vagrant, args = c("--version"), stdout = TRUE, stderr = TRUE)))
+    if (grepl("Vagrant", out[1])) {
+      pos_value <- regexpr("[0-9\\.]+", out[1])
+      version <- substr(out[1], pos_value, pos_value + attr(pos_value, "match.length"))
     }
+  } else {
+    message(
+      "Vagrant seems not to be installed.\n",
+      "Please visit the page below and download and install vagrant: \n",
+      "https://www.vagrantup.com/downloads.html\n"
+    )
   }
 
   # vagrant version
   # if ( !identical(pos <- grep("Installed Version: ", out), integer(0)) ) message("# Vagrant ", out[pos])
   # if ( !identical(pos <- grep("Latest Version: ", out), integer(0)) ) message("# Please upgrade vagrant to ", out[pos])
 
-  return(out)
+  return(list("vagrant_bin" = where_is_vagrant, "version" = version))
 }
 
 # @title Run a command via ssh on guest machine

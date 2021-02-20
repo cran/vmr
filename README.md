@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![pipeline status](https://gitlab.com/rstuff/vmr/badges/master/pipeline.svg)](https://gitlab.com/rstuff/vmr/-/commits/master)
+[![CRAN status](https://www.r-pkg.org/badges/version/vmr)](https://cran.r-project.org/package=vmr)
 <!-- badges: end -->
 
 A R package to manage Virtual Machines using _Vagrant_ tool.  

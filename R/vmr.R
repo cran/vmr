@@ -30,8 +30,8 @@
 #' @details \tabular{ll}{
 #'          Package: \tab vmr\cr
 #'          Type: \tab Package\cr
-#'          Version: \tab 0.0.1\cr
-#'          Date: \tab 2021-02-04\cr
+#'          Version: \tab 0.0.2\cr
+#'          Date: \tab 2021-02-19\cr
 #'          License: \tab GPL (>=3)\cr
 #'          }
 #' @details This package is a wrap of the [Vagrant](https://www.vagrantup.com/)
@@ -50,7 +50,10 @@
 #' library("vmr")
 #' }
 #' @md
+#' @importFrom curl curl_fetch_memory
+#' @importFrom jsonlite prettify parse_json
 "_PACKAGE"
 
 vmr_env <- new.env(parent = emptyenv())
 vmr_env$verbose_mode <- 1
+vmr_env$vagrant_bin <- "vagrant"

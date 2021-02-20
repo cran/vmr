@@ -29,8 +29,8 @@ getAvailableBoxes <- function(org = .VagrantCloudOrganization) {
 
   # json_res <- jsonlite::prettify(rawToChar(req$content))
   # print(json_res)
-  printVerbose(2, "parsing response : \n ", paste0(" \n",rawToChar(req$content)))
-  json_res <- jsonlite::parse_json(paste0(" \n",rawToChar(req$content)))
+  printVerbose(2, "parsing response : \n ", paste0(" \n", rawToChar(req$content)))
+  json_res <- jsonlite::parse_json(paste0(" \n", rawToChar(req$content)))
 
 
   list_boxes <- lapply(json_res$boxes, FUN = function(l) {
@@ -60,8 +60,8 @@ getBoxInfo <- function(name, org = .VagrantCloudOrganization) {
 
   # json_res <- jsonlite::prettify(rawToChar(req$content))
   # print(json_res)
-  printVerbose(2, "parsing response : \n ", paste0(" \n",rawToChar(req$content)))
-  json_res <- jsonlite::parse_json(paste0(" \n",rawToChar(req$content)))
+  printVerbose(2, "parsing response : \n ", paste0(" \n", rawToChar(req$content)))
+  json_res <- jsonlite::parse_json(paste0(" \n", rawToChar(req$content)))
 
 
   # last_box <- lapply(json_res$current_version$providers,
@@ -104,12 +104,12 @@ getBoxInfo <- function(name, org = .VagrantCloudOrganization) {
 # @return API answer
 .requestVagrantAPI <- function(api_uri = "/user/VMR") {
   url <- paste0(.VagrantCloudURL, "/api/v1", api_uri)
-  printVerbose(2, "Fetching information from ",url)
+  printVerbose(2, "Fetching information from ", url)
   res <- curl::curl_fetch_memory(url)
 
   printVerbose(2, "Response status: ", res$status_code)
   printVerbose(2, "Response type: ", res$type)
-  
+
   if (res$status_code != 200) {
     warning("VagrantCloud API query return ", res$status_code, "code => seems somethings got wrong")
   }

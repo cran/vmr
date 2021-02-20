@@ -51,8 +51,8 @@ test_that("VagrantFile read", {
   skip_on_cran()
   skip_if(TRUE)
   skip_on_ci()
-  skip_if_not(file.exists("Vagrantfile.default"), message = paste("bad wd ",getwd()))
-  skip_if(vagrantIsInstalled() == "", message = paste("vagrant not installed",getwd()))
+  skip_if_not(file.exists("Vagrantfile.default"), message = paste("bad wd ", getwd()))
+  skip_if(vagrantIsInstalled() == "", message = paste("vagrant not installed", getwd()))
 
   vmr_env_read <- vmrLoad(getwd(), "Vagrantfile.default")
 

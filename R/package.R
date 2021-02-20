@@ -38,12 +38,14 @@ getInfo <- function() {
 # @return check results
 .checkDependencies <- function() {
   res <- vagrantIsInstalled()
-  if( !is.null(res) && !identical(grep("[0-9\\.]+",res), integer(0)) )
-    message(paste0("vagrant version: ",res))
+  if (!is.null(res) && nzchar(res$vagrant_bin) && grepl("[0-9\\.]+", res$version)) {
+    message(paste0("vagrant path: ", res$vagrant_bin))
+    message(paste0("vagrant version: ", res$version))
+  }
   ## TODO Virtualbox or providers check
 }
 
-# @title Things to do at load
+# @title Things to do at package attach
 # @name .onAttach
 # @param libname a character string giving the library directory where
 #  the package defining the namespace was found.
@@ -54,13 +56,30 @@ getInfo <- function() {
   .checkDependencies()
 }
 
+# @title Things to do at package load
+# @name .onLoad
+# @param libname a character string giving the library directory where
+#  the package defining the namespace was found.
+# @param pkgname a character string giving the name of the package.
+# @description Print package information and check dependencies
+.onLoad <- function(libname, pkgname) {
+  vmr_env$verbose_mode <- 1
+
+  vagrant_exec <- Sys.which("vagrant")
+  if (nzchar(vagrant_exec)) {
+    vmr_env$vagrant_bin <- vagrant_exec
+  } else {
+    vmr_env$vagrant_bin <- "vagrant"
+  }
+}
 
 # @title manage verbose message
-# @description print message if verbose_mode is >= to verbose_val 
+# @description print message if verbose_mode is >= to verbose_val
 # @param verbose_val
 # @param ... messages to print
-printVerbose <- function(verbose_val=0, ...) {
-  if(vmr_env$verbose_mode >= verbose_val)
+printVerbose <- function(verbose_val = 0, ...) {
+  if (vmr_env$verbose_mode >= verbose_val) {
     cat(paste0(" vmr ==> ", paste(..., collapse = " "), "\n"))
+  }
   return(invisible(NULL))
 }

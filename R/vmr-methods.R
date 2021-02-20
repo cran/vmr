@@ -17,7 +17,7 @@
 #' @title Set verbose level
 #' @name vmrSetVerbose
 #' @description Set verbose level for vmr package functions
-#' @details Three verboses mode is available:  
+#' @details Three verboses mode is available:
 #' * "None" : print nothings
 #' * "Normal" : print essential
 #' * "Full" : print all
@@ -25,8 +25,8 @@
 #' @return invisible verbose value
 #' @export
 #' @md
-vmrSetVerbose <- function(verbose_mode="Normal") {
-  switch (verbose_mode,
+vmrSetVerbose <- function(verbose_mode = "Normal") {
+  switch(verbose_mode,
     "None" =  vmr_env$verbose_mode <- 0,
     "Normal" = vmr_env$verbose_mode <- 1,
     "Full" =  vmr_env$verbose_mode <- 2,
@@ -75,14 +75,14 @@ vmrListBox <- function(box_name, org = .VagrantCloudOrganization) {
 #' @title Create a __vmr__ environment class
 #' @name vmrCreate
 #' @description Create a __vmr__ object.
-#' @details Create a S3 __vmr__ object (a simple list).  
+#' @details Create a S3 __vmr__ object (a simple list).
 #' The object contains all information needed to configure and manage a
-#' __vmr__ environment (a vagrant environment).  
-#' 
-#' A __vmr__ environment need mostly a box _name_ and a _provider_.  
+#' __vmr__ environment (a vagrant environment).
+#'
+#' A __vmr__ environment need mostly a box _name_ and a _provider_.
 #' The environment is attached to the current working directory.
-#'   
-#' __vmr__ object main attributs:  
+#'
+#' __vmr__ object main attributs:
 #' * __path__: working directory
 #' * __org__: Vagrant cloud user/organization name 'VMR'
 #' * __box__: the box name
@@ -121,16 +121,16 @@ vmrListBox <- function(box_name, org = .VagrantCloudOrganization) {
 #' @export
 #' @md
 vmrCreate <- function(name, provider = "virtualbox", version = "latest", provider.options = virtualboxOptions(FALSE)) {
-  printVerbose(1,"Creating vmr environment...")
+  printVerbose(1, "Creating vmr environment...")
   vmr <- list()
   attr(vmr, "class") <- "vmr"
   vmr$path <- normalizePath(getwd())
-  
-  if( !identical(grep("/", name), integer(0)) ) {
+
+  if (!identical(grep("/", name), integer(0))) {
     pos <- regexpr("/", name)
-    vmr$org <- substr(name, 1, pos-1)
-    vmr$box <- substr(name, pos+1, nchar(name))
-  }else{
+    vmr$org <- substr(name, 1, pos - 1)
+    vmr$box <- substr(name, pos + 1, nchar(name))
+  } else {
     vmr$org <- .VagrantCloudOrganization
     vmr$box <- name
   }
@@ -138,7 +138,7 @@ vmrCreate <- function(name, provider = "virtualbox", version = "latest", provide
   vmr$provider <- provider
   vmr$provider_options <- provider.options
 
-  vmr$vagrantName <- paste0("vmr-", sub("/", "-",name), "-", provider)
+  vmr$vagrantName <- paste0("vmr-", sub("/", "-", name), "-", provider)
   vmr$ID <- vagrantGetID(vmr$vagrantName, vmr$path)
 
   vmr$synced_folder <- list()
@@ -154,7 +154,7 @@ vmrCreate <- function(name, provider = "virtualbox", version = "latest", provide
 #' @title List provider options
 #' @name getProviderOptions
 #' @description List a provider available options.
-#' @details It return a list of options name and value for a specific provider.  
+#' @details It return a list of options name and value for a specific provider.
 #' To get the help page do ```?<provider_name>Options()```, for example [[virtualboxOptions()]].
 #' @param provider a provider name
 #' @param details if TRUE print options, otherwise return default options
@@ -197,7 +197,7 @@ print.vmr <- function(x, ...) {
   } else {
     cat(x$provider, "unknow or not implemented provider\n")
   }
-  
+
   return(invisible(x))
 }
 
@@ -209,7 +209,7 @@ print.vmr <- function(x, ...) {
 #' @return the __vmr__ object (via invisible(x))
 #' @export
 #' @md
-summary.vmr <- function(object, ...){
+summary.vmr <- function(object, ...) {
   print.vmr(object)
 }
 
@@ -237,7 +237,7 @@ summary.vmr <- function(object, ...){
 #' @name vmrLoad
 #' @description Load a __vmr__ environment containing a VagrantFile
 #'  and create a __vmr__ object (see [[vmrCreate()]] for object details).
-#' @details It read a Vagrant file template with __vmr__ compatible parameters.    
+#' @details It read a Vagrant file template with __vmr__ compatible parameters.
 #' It's an experimental Vagrant file reading, some parameters may not be loaded.
 #' @param dir the __vmr__ environment directory (default: "./")
 #' @param vagrantfileName a Vagrantfile name (default: "Vagrantfile")
@@ -265,8 +265,8 @@ vmrLoad <- function(dir = "./", vagrantfileName = "Vagrantfile") {
   attr(vmr, "class") <- "vmr"
   vmr$path <- path
 
-  printVerbose(1,paste0("Reading ", vagrant_file))
-  
+  printVerbose(1, paste0("Reading ", vagrant_file))
+
   vagrant_data <- readLines(vagrant_file)
 
   extract <- function(text_vector, pattern) {
@@ -293,7 +293,7 @@ vmrLoad <- function(dir = "./", vagrantfileName = "Vagrantfile") {
   }
 
   vmr$ID <- vagrantGetID(vmr$vagrantName, vmr$path)
-  
+
   vmr$synced_folder <- list()
   vmr$synced_folder$source <- ""
   vmr$synced_folder$destination <- ""
@@ -330,24 +330,27 @@ vmrLoad <- function(dir = "./", vagrantfileName = "Vagrantfile") {
 #' @return the __vmr__ object
 #' @export
 vmrInitEnv <- function(vmr, force.vagrantfile = FALSE, force.download = FALSE) {
-  printVerbose(1,"Initialize vmr environment")
+  printVerbose(1, "Initialize vmr environment")
   .checkMinimalVMR(vmr)
-  
+
   oldpath <- getwd()
   setwd(vmr$path)
   on.exit(setwd(oldpath))
-  
+
   if (vmrIsRunning()) stop("The virtual guest is running. run vmrStop() and recall this function")
 
   writeVagrantFile(vmr, force.vagrantfile)
-  
+
   ## TODO may update box vagrantBoxUpdate
-  if( identical(grep("/", vmr$box), integer(0)) ) box <- paste0(vmr$org, "/", vmr$box)
-  else box <- vmr$box
+  if (identical(grep("/", vmr$box), integer(0))) {
+    box <- paste0(vmr$org, "/", vmr$box)
+  } else {
+    box <- vmr$box
+  }
   vagrantBoxAdd(box, vmr$version, vmr$provider, force.download)
 
-  printVerbose(1,"Now run vmr<Function>() into", vmr$path, "directory")
-  
+  printVerbose(1, "Now run vmr<Function>() into", vmr$path, "directory")
+
   return(invisible(vmr))
 }
 
@@ -363,7 +366,7 @@ writeVagrantFile <- function(vmr, force = FALSE) {
   }
 
   printVerbose(2, "Creating Vagrantfile template in ", getwd())
-  
+
   tryCatch(
     {
       sink("Vagrantfile")
@@ -371,26 +374,30 @@ writeVagrantFile <- function(vmr, force = FALSE) {
         # if (isTRUE(vmr$r$update_packages) || length(vmr$r$install_packages) != 0) .provisionRscript(vmr),
         'Vagrant.configure("2") do |config|\n',
 
-        if( !identical(grep("/", vmr$box), integer(0)) ) paste0('\tconfig.vm.box = "', vmr$box, '"\n')
-        else paste0('\tconfig.vm.box = "', vmr$org, "/", vmr$box, '"\n'),
-        
+        if (!identical(grep("/", vmr$box), integer(0))) {
+          paste0('\tconfig.vm.box = "', vmr$box, '"\n')
+        } else {
+          paste0('\tconfig.vm.box = "', vmr$org, "/", vmr$box, '"\n')
+        },
+
         if (vmr$version != "" && vmr$version != "latest") paste0('\tconfig.vm.box_version = "', vmr$version, '"\n'),
-    
+
         if (vmr$synced_folder$source != "" && vmr$synced_folder$destination != "") {
           paste0('\tconfig.vm.synced_folder "', vmr$synced_folder$source, '", "', vmr$synced_folder$destination, '"\n')
         },
         '\tconfig.vm.synced_folder ".", "/vagrant", disabled: true\n',
-    
+
         paste0('\tconfig.vm.define "', vmr$vagrantName, '" do |d|\n'),
         "\tend\n",
         # SSH configuration
         '\tconfig.ssh.username ="', vmr$ssh_user, '"\n',
         '\tconfig.ssh.password ="', vmr$ssh_pwd, '"\n',
         "\tconfig.ssh.keep_alive = true\n",
-    
+        "\tconfig.ssh.insert_key = true\n",
+
         # Provisioning
         # if (isTRUE(vmr$r$update_packages) || length(vmr$r$install_packages) != 0) '\tconfig.vm.provision "shell", inline: $rscript\n',
-    
+
         # Provider configuration (default virtualbox)
         # for providers options '\tconfig.vm.provider = "',vmr$provider,'"\n',
         if (!is.null(vmr$provider) && nchar(vmr$provider) > 0) {
@@ -409,8 +416,9 @@ writeVagrantFile <- function(vmr, force = FALSE) {
       warning("May have some error writing Vagrantfile template\n", cond, immediate. = TRUE)
     },
     finally = {
-    })
-    
+    }
+  )
+
   return(normalizePath("Vagrantfile"))
 }
 
@@ -418,7 +426,7 @@ writeVagrantFile <- function(vmr, force = FALSE) {
 #' @title Get guest machine information
 #' @name vmrInfo
 #' @description Get guest machine information.
-#' Print OS, R, R-devel and R packages information.  
+#' Print OS, R, R-devel and R packages information.
 #' Still in development.
 #' @examples
 #' \dontrun{
@@ -518,20 +526,22 @@ vmrDestroy <- function(id = "", force = FALSE) {
     printVerbose(1, paste0("The VM ", vm$name, " will not be destroyed"))
   }
 
-  if( id == "") {
+  if (id == "") {
     x <- "y"
     if (!isTRUE(force)) {
-      x <- readline(paste0("Do you want to remove Vagrantfile template ",
-                    "and .vagrant directory ",
-                    "(clean vmr environment) ? [y/N] "))
+      x <- readline(paste0(
+        "Do you want to remove Vagrantfile template ",
+        "and .vagrant directory ",
+        "(clean vmr environment) ? [y/N] "
+      ))
     }
-    
+
     if (x == "y" || x == "Y") {
       file.remove(paste0(getwd(), "/Vagrantfile"))
       unlink(paste0(getwd(), "/.vagrant"), recursive = TRUE)
     }
   }
-  
+
   return(invisible(vm$id))
 }
 
@@ -589,7 +599,7 @@ vmrLocalBoxList <- function() {
 #' @name vmrLocalBoxUpdate
 #' @description Download the latest version of the box use in the current __vmr__ environment.
 #' @return execution code or message
-#' @export 
+#' @export
 #' @md
 vmrLocalBoxUpdate <- function() {
   printVerbose(2, "Download latest version of the current environment box")
@@ -615,8 +625,8 @@ vmrLocalBoxUpdate <- function() {
 #' @md
 vmrLocalBoxRemove <- function(name, provider = "", version = "", force = FALSE) {
   printVerbose(2, paste0("Remove the box: ", name))
-  if(provider != "") printVerbose(1, "Provider: ", provider)
-  if(version != "") printVerbose(1, "Version: ", version)
+  if (provider != "") printVerbose(1, "Provider: ", provider)
+  if (version != "") printVerbose(1, "Version: ", version)
   invisible(vagrantBoxRemove(name, provider, version, force))
 }
 
@@ -654,7 +664,7 @@ vmrLocalBoxPrune <- function() {
 vmrTakeSnapshot <- function(snap_name) {
   printVerbose(1, "Taking a snapshot ", snap_name)
   vagrantSnapshot("save", snap_name)
-  
+
   return(invisible(snap_name))
 }
 
@@ -672,7 +682,7 @@ vmrTakeSnapshot <- function(snap_name) {
 vmrRestoreSnapshot <- function(snap_name) {
   printVerbose(1, "Restore snapshot: ", snap_name)
   vagrantSnapshot("restore", snap_name)
-  
+
   return(invisible(snap_name))
 }
 
@@ -683,7 +693,7 @@ vmrRestoreSnapshot <- function(snap_name) {
 #' @export
 #' @md
 vmrListSnapshot <- function() {
-  printVerbose(1,"Listing snapshot")
+  printVerbose(1, "Listing snapshot")
   vagrantSnapshot("list")
   ## TODO return the list name
   return(NULL)
@@ -727,8 +737,10 @@ vmrStatus <- function() {
   printVerbose(1, "Getting status")
   st <- vagrantStatus()
 
-  printVerbose(1, paste0("The machine ", st$vagrantName, " provided by:\n",
-                         st$provider, " is ", st$state))
+  printVerbose(1, paste0(
+    "The machine ", st$vagrantName, " provided by:\n",
+    st$provider, " is ", st$state
+  ))
   return(st)
 }
 
@@ -742,12 +754,14 @@ vmrStatus <- function() {
 vmrBoxDownload <- function(vmr) {
   .checkMinimalVMR(vmr)
 
-  printVerbose(1,
-  paste0(
-    "Will download the box ", paste0(vmr$org, "/", vmr$box),
-    " ", vmr$version,
-    " for", vmr$provider, "provider."
-  ))
+  printVerbose(
+    1,
+    paste0(
+      "Will download the box ", paste0(vmr$org, "/", vmr$box),
+      " ", vmr$version,
+      " for", vmr$provider, "provider."
+    )
+  )
   res <- vagrantBoxAdd(name = paste0(vmr$org, "/", vmr$box), version = vmr$version, provider = vmr$provider)
 
   return(invisible(vmr))
@@ -801,7 +815,7 @@ vmrStop <- function(force = FALSE) {
   } else {
     stop("virtual machine is not running")
   }
-  
+
   return(NULL)
 }
 
@@ -822,9 +836,11 @@ vmrStop <- function(force = FALSE) {
 #' @export
 #' @md
 vmrIsRunning <- function() {
-  if( file.exists("Vagrantfile") ){
+  if (file.exists("Vagrantfile")) {
     st <- vagrantStatus()
-    if( length(st) != 0) return(st$state == "running")
+    if (length(st) != 0) {
+      return(st$state == "running")
+    }
   }
   return(FALSE)
 }
@@ -918,7 +934,7 @@ vmrSend <- function(elt = c()) {
 #' @name vmrExec
 #' @description Run R method into guest machine.
 #' @details call Rscript -e "cmd" into the guest machine from
-#'  the current __vmr__ environment.  
+#'  the current __vmr__ environment.
 #'  Command are independents and do not keep memory of past commands.
 #' @param cmd list of R command
 #' @examples
@@ -938,7 +954,7 @@ vmrExec <- function(cmd = c()) {
   })
 
   res <- lapply(Rcmds, vagrantSSHCommand)
-  #return(invisible(res))
+  # return(invisible(res))
   return(NULL)
 }
 
@@ -961,12 +977,14 @@ vmrConnect <- function(vmr) {
                            use vmrStart() or vmrResume()\n")
 
   ssh_conf <- vagrantSSHConfig()
-  printVerbose(2, "Try to connect...\n",
-               "User: ", vmr$ssh_user, "\n",
-               "Passwd: ", vmr$ssh_pwd, "\n",
-               "Host: ", ssh_conf$hostname, "\n",
-               "Port: ", ssh_conf$port, "\n",
-               "Keyfile: ", ssh_conf$keyfile,"\n")
+  printVerbose(
+    2, "Try to connect...\n",
+    "User: ", vmr$ssh_user, "\n",
+    "Passwd: ", vmr$ssh_pwd, "\n",
+    "Host: ", ssh_conf$hostname, "\n",
+    "Port: ", ssh_conf$port, "\n",
+    "Keyfile: ", ssh_conf$keyfile, "\n"
+  )
   session <- ssh::ssh_connect(
     host = paste0(vmr$ssh_user, "@", ssh_conf$hostname, ":", ssh_conf$port),
     keyfile = ssh_conf$keyfile,
@@ -993,7 +1011,7 @@ vmrDisconnect <- function(vmr) {
       call. = FALSE
     )
   }
-  
+
   printVerbose(2, "Disconnect ssh...")
   ssh::ssh_disconnect(vmr$ssh_session)
   vmr$ssh_session <- NULL
@@ -1046,20 +1064,25 @@ vmrPackageCheck <- function(pkg = "./") {
   if (dir.exists(normalizePath(pkg))) {
     to_dir <- basename(normalizePath(pkg))
     to_pkg <- ""
+    Rcmds <- paste0(
+      "Rscript -e \"devtools::check('vmr/package/",
+      to_dir, "/", to_pkg, "')\""
+    )
   }
   else {
     to_dir <- basename(dirname(normalizePath(pkg)))
     to_pkg <- basename(pkg)
+    Rcmds <- paste0(
+      "Rscript -e \"devtools::check_built('vmr/package/",
+      to_dir, "/", to_pkg, "')\""
+    )
   }
 
   printVerbose(2, paste0("Cleaning Guest \"vmr/package/", to_dir, "\""))
   vagrantSSHCommand(paste0("rm -rf vmr/package/", to_dir, "/* 2>&1 > /dev/null"))
   vagrantSSHCommand(paste0("mkdir -p vmr/package/", to_dir, " 2>&1 > /dev/null"))
-  Rcmds <- paste0(
-    "Rscript -e \"devtools::check('vmr/package/",
-    to_dir, "/", to_pkg, "')\""
-  )
-  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir))
+
+  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)
 }
 
@@ -1092,7 +1115,7 @@ vmrPackageBuild <- function(pkg = "./", binary = FALSE) {
     "Rscript -e \"devtools::build('vmr/package/",
     to_dir, "/", to_pkg, "', binary=", binary, ")\""
   )
-  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir))
+  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)
 }
 
@@ -1122,8 +1145,8 @@ vmrPackageTest <- function(pkg = "./") {
   vagrantSSHCommand(paste0("mkdir -p vmr/package/", to_dir, " 2>&1 > /dev/null"))
   Rcmds <- paste0(
     "Rscript -e \"devtools::test('vmr/package/",
-    to_dir, "/", to_pkg, ")\""
+    to_dir, "/", to_pkg, "')\""
   )
-  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir))
+  vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)
 }

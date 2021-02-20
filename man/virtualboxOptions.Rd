@@ -54,6 +54,6 @@ the parent disk image belongs to the master VM.
 vb.opts <- virtualboxOptions(details = FALSE)
 vb.opts$modifyvm$cpus <- "4"
 vb.opts$modifyvm$memory <- "8192"
-vb.opts 
+vb.opts
 }
 }
