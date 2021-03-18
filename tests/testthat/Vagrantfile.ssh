@@ -4,5 +4,10 @@ Vagrant.configure("2") do |config|
 	config.vm.define "vmr-FakeBox-virtualbox" do |d|
 	end
 	config.vm.communicator = "ssh"
-	config.ssh.insert_key = false
+	config.ssh.username ="vmr"
+	config.ssh.password ="vmr"
+	config.ssh.keep_alive = true
+	config.ssh.insert_key = true
+	config.ssh.port = 2222
+	config.ssh.private_key_path = "/some/where/in/space/"
 end

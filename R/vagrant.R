@@ -259,12 +259,12 @@ vagrantGlobalStatus <- function() {
   args <- c("global-status", "--prune") # , "--machine-readable")
   res <- vagrantExec(args, stdout = TRUE)
 
-  if (is.character(res)) {
+  if ((is.null(attr(res, "status")) || attr(res, "status") == 0) && is.character(res)) {
     col_name <- strsplit(res[1], split = "[ ]+")[[1]]
 
     global_status <- data.frame(matrix(ncol = length(col_name), nrow = 0))
 
-    if (!identical(res, integer(0))) {
+    if (!identical(res, integer(0)) && !identical(which(res == " "), integer(0))) {
       trash <- lapply(res[3:(which(res == " ") - 1)], FUN = function(vm) {
         global_status <<- rbind(global_status, strsplit(vm, split = "[ ]+")[[1]])
       })

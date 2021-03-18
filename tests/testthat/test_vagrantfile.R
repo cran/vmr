@@ -12,8 +12,10 @@ vmr_env$ID <- ""
 vmr_env$synced_folder <- list()
 vmr_env$synced_folder$source <- ""
 vmr_env$synced_folder$destination <- ""
-vmr_env$ssh_user <- "vmr"
-vmr_env$ssh_pwd <- "vmr"
+vmr_env$ssh_user <- "vagrant"
+vmr_env$ssh_pwd <- "vagrant"
+vmr_env$ssh_port <- ""
+vmr_env$ssh_private_key_path <- ""
 
 test_that("VagrantFile write", {
   path <- writeVagrantFile(vmr_env, force = TRUE)
@@ -45,6 +47,21 @@ test_that("VagrantFile write", {
     name = paste0(basename(path), ".virtualbox"),
     binary = FALSE, cran = FALSE
   )
+
+  vmr_ssh <- vmr_env
+  vmr_ssh$ssh_user <- "vmr"
+  vmr_ssh$ssh_pwd <- "vmr"
+  vmr_ssh$ssh_port <- 2222
+  vmr_ssh$ssh_private_key_path <- "/some/where/in/space/"
+
+  path <- writeVagrantFile(vmr_ssh, force = TRUE)
+
+  expect_snapshot_file(path,
+    name = paste0(basename(path), ".ssh"),
+    binary = FALSE, cran = FALSE
+  )
+
+  file.remove("Vagrantfile")
 })
 
 test_that("VagrantFile read", {
@@ -71,4 +88,17 @@ test_that("VagrantFile read", {
   expect_equal(vmr_vb$destination, vmr_env_read$destination)
   expect_equal(vmr_vb$provider_options$gui, vmr_env_read$provider_options$gui)
   expect_equal(vmr_vb$provider_options$modifyvm$memory, vmr_env_read$provider_options$modifyvm$memory)
+
+  vmr_ssh <- vmr_env
+  vmr_ssh$ssh_user <- "vmr"
+  vmr_ssh$ssh_pwd <- "vmr"
+  vmr_ssh$ssh_port <- 2222
+  vmr_ssh$ssh_private_key_path <- "/some/where/in/space/"
+
+  vmr_env_read <- vmrLoad(getwd(), "Vagrantfile.ssh")
+
+  expect_equal(vmr_ssh$ssh_user, vmr_env_read$ssh_user)
+  expect_equal(vmr_ssh$ssh_pwd, vmr_env_read$ssh_pwd)
+  expect_equal(vmr_ssh$ssh_port, vmr_env_read$ssh_port)
+  expect_equal(vmr_ssh$ssh_private_key_path, vmr_env_read$ssh_private_key_path)
 })

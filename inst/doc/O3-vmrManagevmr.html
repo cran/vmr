@@ -14,22 +14,6 @@
 
 <title>3- Manage vmr environment</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -43,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -55,16 +39,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -73,9 +55,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -348,7 +330,7 @@ A <em>vmr</em> object contains information to create and modify an <strong>vmr</
 <h2>Create a <strong>vmr</strong> environment</h2>
 <div id="create-a-vmr-object" class="section level3">
 <h3>Create a <em>vmr</em> object</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="op">&lt;</span>boxname<span class="op">&gt;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="op">&lt;</span>boxname<span class="op">&gt;</span>)</a></code></pre></div>
 <p><em>vmrCreate()</em> function create a <em>vmr</em> object using several arguments:<br />
 * name : the box name (from <em>vmrList()</em>)<br />
 * provider: the provider name (from <em>vmrList()</em>)<br />
@@ -358,9 +340,9 @@ A <em>vmr</em> object contains information to create and modify an <strong>vmr</
 <div id="load-a-vmr-object" class="section level3">
 <h3>Load a <em>vmr</em> object</h3>
 <p>Set the working directory to a <strong>vmr</strong> environment who was already initialized.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">setwd</span>(<span class="st">&quot;path/to/my/vmr/environment/&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</span>
-<span id="cb2-3"><a href="#cb2-3"></a>vmr_env</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;path/to/my/vmr/environment/&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</a>
+<a class="sourceLine" id="cb2-3" title="3">vmr_env</a></code></pre></div>
 </div>
 </div>
 <div id="initialize-a-vmr-environment" class="section level2">
@@ -369,18 +351,18 @@ A <em>vmr</em> object contains information to create and modify an <strong>vmr</
 <blockquote>
 <p>The box download can be long depending of the box size and network bandwide. The box is save in vagrant environment (“~/.vagrant.d/”).</p>
 </blockquote>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>vmr_env <span class="co"># created or loaded object</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># force.vagrantfile will override existing Vagrantfile template</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env, <span class="dt">force.vagrantfile=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">vmr_env <span class="co"># created or loaded object</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co"># force.vagrantfile will override existing Vagrantfile template</span></a>
+<a class="sourceLine" id="cb3-3" title="3">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env, <span class="dt">force.vagrantfile=</span><span class="ot">TRUE</span>)</a></code></pre></div>
 <div id="clean-a-vmr-environment" class="section level3">
 <h3>Clean a <strong>vmr</strong> environment</h3>
 <p>To remove any file created, boxes downloaded and provider instance run this commands:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># provider cleaning</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">vmrDestroy</span>(vmr_env<span class="op">$</span>id)</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># box cleaning</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">vmrLocalBoxRemove</span>(vmr_env<span class="op">$</span>box, <span class="dt">provider =</span> vmr_env<span class="op">$</span>provider, <span class="dt">version =</span> vmr_env<span class="op">$</span>version)</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># remove the working directory</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co"># provider cleaning</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">vmrDestroy</span>(vmr_env<span class="op">$</span>id)</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co"># box cleaning</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="kw">vmrLocalBoxRemove</span>(vmr_env<span class="op">$</span>box, <span class="dt">provider =</span> vmr_env<span class="op">$</span>provider, <span class="dt">version =</span> vmr_env<span class="op">$</span>version)</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co"># remove the working directory</span></a></code></pre></div>
 </div>
 </div>
 <div id="add-options-to-vmr-environment" class="section level2">
@@ -390,39 +372,39 @@ A <em>vmr</em> object contains information to create and modify an <strong>vmr</
 <div id="upgrade-environment" class="section level3">
 <h3>Upgrade environment</h3>
 <p>It’s possible to upgrade an environment to use the latest box version.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrUpdateEnvVersion</span>(vmr_env)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrUpdateEnvVersion</span>(vmr_env)</a></code></pre></div>
 </div>
 <div id="shared-files" class="section level3">
 <h3>Shared files</h3>
 <p>To share a host directory to the guest.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrMountDir</span>(vmr_env, <span class="dt">src =</span> <span class="st">&quot;/&quot;</span> , <span class="dt">dest =</span> <span class="st">&quot;/&quot;</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrMountDir</span>(vmr_env, <span class="dt">src =</span> <span class="st">&quot;/&quot;</span> , <span class="dt">dest =</span> <span class="st">&quot;/&quot;</span> )</a></code></pre></div>
 </div>
 </div>
 <div id="manipulate-a-vmr-environment" class="section level2">
 <h2>Manipulate a <strong>vmr</strong> environment</h2>
 <p>This functions manage the environment instance.<br />
 They have to be call in <strong>vmr</strong> environment (working directory), with no arguments.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Get environment status</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">vmrStatus</span>()</span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="co"># Start a provider instance</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="kw">vmrStart</span>()</span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Save state and stop provider instance</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">vmrSuspend</span>()</span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># Resume a saved provider instance</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="kw">vmrResume</span>()</span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="co"># Stop a provider instance</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="kw">vmrStop</span>()</span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># Remove a provider instance</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="kw">vmrDestroy</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># Get environment status</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">vmrStatus</span>()</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co"># Start a provider instance</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="kw">vmrStart</span>()</a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co"># Save state and stop provider instance</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="kw">vmrSuspend</span>()</a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co"># Resume a saved provider instance</span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="kw">vmrResume</span>()</a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co"># Stop a provider instance</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="kw">vmrStop</span>()</a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co"># Remove a provider instance</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="kw">vmrDestroy</span>()</a></code></pre></div>
 <div id="snapshot" class="section level3">
 <h3>Snapshot</h3>
 <p>Manage provider instance with snapshot.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Take a snapshot</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co"># resume a snapshot</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="kw">vmrRestoreSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># list snapshots</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">vmrListSnapshot</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># Take a snapshot</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co"># resume a snapshot</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="kw">vmrRestoreSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co"># list snapshots</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw">vmrListSnapshot</span>()</a></code></pre></div>
 </div>
 </div>
 <div id="vignette-summary" class="section level2">

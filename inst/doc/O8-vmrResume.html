@@ -14,22 +14,6 @@
 
 <title>8- vmr package functions resume</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -43,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -55,16 +39,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -73,9 +55,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -356,86 +338,86 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="list-available-boxes" class="section level2">
 <h2>List available boxes</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>list_boxes &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">print</span>(list_boxes)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">list_boxes &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">print</span>(list_boxes)</a></code></pre></div>
 </div>
 <div id="get-box-information" class="section level2">
 <h2>Get box information</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">vmrListBox</span>(<span class="st">&quot;boxname&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">vmrListBox</span>(<span class="st">&quot;boxname&quot;</span>)</a></code></pre></div>
 </div>
 <div id="create-a-vmr-environment" class="section level2">
 <h2>Create a <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="dt">name =</span> <span class="st">&quot;boxname&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="dt">name =</span> <span class="st">&quot;boxname&quot;</span>)</a></code></pre></div>
 </div>
 <div id="get-providers-options" class="section level2">
 <h2>Get providers options:</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>vb.options &lt;-<span class="st"> </span><span class="kw">getProviderOptions</span>(<span class="dt">provider=</span><span class="st">&quot;virtualbox&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>vb.options</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">vb.options &lt;-<span class="st"> </span><span class="kw">getProviderOptions</span>(<span class="dt">provider=</span><span class="st">&quot;virtualbox&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">vb.options</a></code></pre></div>
 </div>
 <div id="initialize-vmr-environment" class="section level2">
 <h2>Initialize <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">vmrInitEnv</span>(vmr_env)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">vmrInitEnv</span>(vmr_env)</a></code></pre></div>
 </div>
 <div id="load-an-already-initialized-vmr-environment" class="section level2">
 <h2>Load an already initialized <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">setwd</span>(<span class="st">&quot;/path/to/vmr/environment/&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;/path/to/vmr/environment/&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</a></code></pre></div>
 </div>
 <div id="start-vmr-environment" class="section level2">
 <h2>Start <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">vmrStart</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">vmrStart</span>()</a></code></pre></div>
 </div>
 <div id="vmr-environment-status" class="section level2">
 <h2><strong>vmr</strong> environment Status:</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">vmrStatus</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">vmrStatus</span>()</a></code></pre></div>
 </div>
 <div id="get-guest-informations" class="section level2">
 <h2>Get Guest informations:</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">vmrInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">vmrInfo</span>()</a></code></pre></div>
 </div>
 <div id="save-and-stop-the-environment" class="section level2">
 <h2>Save and stop the environment:</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">vmrSuspend</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">vmrSuspend</span>()</a></code></pre></div>
 </div>
 <div id="resume-an-environment-previously-suspended" class="section level2">
 <h2>Resume an environment previously suspended:</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">vmrResume</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">vmrResume</span>()</a></code></pre></div>
 </div>
 <div id="stop-a-vmr-environment" class="section level2">
 <h2>Stop a <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">vmrStop</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">vmrStop</span>()</a></code></pre></div>
 </div>
 <div id="remove-a-vmr-environment" class="section level2">
 <h2>Remove a <strong>vmr</strong> environment</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">vmrDestroy</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">vmrDestroy</span>()</a></code></pre></div>
 </div>
 <div id="update-r-packages" class="section level2">
 <h2>Update R packages</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">vmrUpdatePackages</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">vmrUpdatePackages</span>()</a></code></pre></div>
 </div>
 <div id="install-r-packages" class="section level2">
 <h2>Install R packages</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">vmrInstallPackages</span>(<span class="kw">c</span>(<span class="st">&quot;vmr&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">vmrInstallPackages</span>(<span class="kw">c</span>(<span class="st">&quot;vmr&quot;</span>))</a></code></pre></div>
 </div>
 <div id="run-r-commands" class="section level2">
 <h2>Run R commands</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">vmrExec</span>(<span class="dt">cmd=</span><span class="kw">c</span>(<span class="st">&quot;print(Hello World !&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">vmrExec</span>(<span class="dt">cmd=</span><span class="kw">c</span>(<span class="st">&quot;print(Hello World !&quot;</span>))</a></code></pre></div>
 </div>
 <div id="test-r-package" class="section level2">
 <h2>Test R package</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">vmrPackageTest</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">vmrPackageTest</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</a></code></pre></div>
 </div>
 <div id="check-r-package" class="section level2">
 <h2>Check R package</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">vmrPackageCheck</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">vmrPackageCheck</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</a></code></pre></div>
 </div>
 <div id="build-r-package" class="section level2">
 <h2>Build R package</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">vmrPackageBuild</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">vmrPackageBuild</span>(<span class="dt">pkg =</span> <span class="st">&quot;./&quot;</span>)</a></code></pre></div>
 </div>
 <div id="send-files-and-run-bash-commands" class="section level2">
 <h2>Send files and run bash commands</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">vmrProvision</span>(<span class="dt">elts =</span> <span class="kw">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="dt">cmd=</span><span class="kw">c</span>(<span class="st">&quot;ls&quot;</span>,<span class="st">&quot;./myscript.sh&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">vmrProvision</span>(<span class="dt">elts =</span> <span class="kw">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="dt">cmd=</span><span class="kw">c</span>(<span class="st">&quot;ls&quot;</span>,<span class="st">&quot;./myscript.sh&quot;</span>))</a></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>

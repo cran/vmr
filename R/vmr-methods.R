@@ -94,6 +94,8 @@ vmrListBox <- function(box_name, org = .VagrantCloudOrganization) {
 #' * __synced_folder__: a list with source and destination
 #' * __ssh_user__: the ssh user
 #' * __ssh_pwd__: the ssh user password
+#' * __ssh_port__: the ssh port
+#' * __ssh_private_key_path__: the private ssh key path
 #' @param name a box name
 #' @param provider the box provider (default: "virtualbox")
 #' @param version the box version (default : "latest")
@@ -145,8 +147,10 @@ vmrCreate <- function(name, provider = "virtualbox", version = "latest", provide
   vmr$synced_folder$source <- ""
   vmr$synced_folder$destination <- ""
 
-  vmr$ssh_user <- "vmr"
-  vmr$ssh_pwd <- "vmr"
+  vmr$ssh_user <- "vagrant"
+  vmr$ssh_pwd <- "vagrant"
+  vmr$ssh_port <- ""
+  vmr$ssh_private_key_path <- ""
 
   return(vmr)
 }
@@ -191,6 +195,8 @@ print.vmr <- function(x, ...) {
   }
   cat("ssh user:", x$ssh_user, "\n")
   cat("ssh password:", x$ssh_pwd, "\n")
+  cat("ssh port:", x$ssh_port, "\n")
+  if (x$ssh_private_key_path != "") cat("ssh private key path:", x$ssh_private_key_path, "\n")
   cat("Provider:", x$provider, "\n")
   if (x$provider == "virtualbox") {
     virtualboxPrintOptions(x$provider_options)
@@ -275,6 +281,12 @@ vmrLoad <- function(dir = "./", vagrantfileName = "Vagrantfile") {
     substr(text, pos_value + 1, pos_value + attr(pos_value, "match.length") - 2)
   }
 
+  extractInt <- function(text_vector, pattern) {
+    text <- text_vector[grep(pattern, text_vector)]
+    pos_value <- regexpr("= [0-9]+", text)
+    as.integer(substr(text, pos_value + 2, pos_value + attr(pos_value, "match.length")))
+  }
+
   box <- strsplit(extract(vagrant_data, "config.vm.box "), split = "/")[[1]]
   vmr$org <- box[1]
   vmr$box <- box[2]
@@ -305,7 +317,13 @@ vmrLoad <- function(dir = "./", vagrantfileName = "Vagrantfile") {
   }
 
   vmr$ssh_user <- extract(vagrant_data, "config.ssh.username")
+  if (identical(character(0), vmr$ssh_user)) vmr$ssh_user <- "vagrant"
   vmr$ssh_pwd <- extract(vagrant_data, "config.ssh.password")
+  if (identical(character(0), vmr$ssh_pwd)) vmr$ssh_pwd <- "vagrant"
+  vmr$ssh_port <- extractInt(vagrant_data, "config.ssh.port")
+  if (identical(integer(0), vmr$ssh_port)) vmr$ssh_port <- ""
+  vmr$ssh_private_key_path <- extract(vagrant_data, "config.ssh.private_key_path")
+  if (identical(character(0), vmr$ssh_private_key_path)) vmr$ssh_private_key_path <- ""
 
   return(vmr)
 }
@@ -389,11 +407,22 @@ writeVagrantFile <- function(vmr, force = FALSE) {
 
         paste0('\tconfig.vm.define "', vmr$vagrantName, '" do |d|\n'),
         "\tend\n",
+
         # SSH configuration
-        '\tconfig.ssh.username ="', vmr$ssh_user, '"\n',
-        '\tconfig.ssh.password ="', vmr$ssh_pwd, '"\n',
-        "\tconfig.ssh.keep_alive = true\n",
-        "\tconfig.ssh.insert_key = true\n",
+        '\tconfig.vm.communicator = "ssh"\n',
+        if (vmr$ssh_user != "vagrant" || vmr$ssh_pwd != "vagrant") {
+          paste0(
+            '\tconfig.ssh.username ="', vmr$ssh_user, '"\n',
+            '\tconfig.ssh.password ="', vmr$ssh_pwd, '"\n',
+            "\tconfig.ssh.keep_alive = true\n",
+            "\tconfig.ssh.insert_key = true\n"
+          )
+        } else {
+          paste0("\tconfig.ssh.insert_key = false\n")
+        },
+
+        if (vmr$ssh_port != "") paste0("\tconfig.ssh.port = ", vmr$ssh_port, "\n"),
+        if (vmr$ssh_private_key_path != "") paste0('\tconfig.ssh.private_key_path = "', vmr$ssh_private_key_path, '"\n'),
 
         # Provisioning
         # if (isTRUE(vmr$r$update_packages) || length(vmr$r$install_packages) != 0) '\tconfig.vm.provision "shell", inline: $rscript\n',
@@ -958,6 +987,35 @@ vmrExec <- function(cmd = c()) {
   return(NULL)
 }
 
+#' @title Configure ssh
+#' @name vmrConfigSSH
+#' @description Configure ssh credential.
+#' @details by default __vmr__ use vagrant as user/password and insecure key
+#' for ssh connection. This behavior can be change here, by setting an another
+#' user and/or ssh keys. Calling with no arguments will disable this option.
+#' Be careful, ssh using only password may result of _vmr_ functions bugs.
+#' @param vmr a __vmr__ object
+#' @param ssh_user the ssh user (default 'vagrant')
+#' @param ssh_pwd the ssh pwd if any (default 'vagrant')
+#' @param port the ssh port (default empty)
+#' @param ssh_private_key_path path to the private ssh key to use (default empty, use insecure vagrant key)
+#' @examples
+#' \dontrun{
+#' vmr <- vmrConfigSSH(ssh_user = "John", ssh_pwd = "d0e", port = "22")
+#' vmr <- vmrConfigSSH(ssh_user = "John", private_key_path = "/path/to/private/key/")
+#' }
+#' @return an updated __vmr__ object
+#' @export
+#' @md
+vmrConfigSSH <- function(vmr, ssh_user = "vagrant", ssh_pwd = "vagrant", port = "", ssh_private_key_path = "") {
+  vmr$ssh_user <- ssh_user
+  vmr$ssh_pwd <- ssh_pwd
+  vmr$ssh_port <- port
+  vmr$ssh_private_key_path <- ssh_private_key_path
+
+  return(vmr)
+}
+
 #' @title Open a ssh connection to guest machine
 #' @name vmrConnect
 #' @description Open a ssh connection to guest machine
@@ -1049,7 +1107,8 @@ vmrProvision <- function(cmd = c(), elts = c(), dest = "") {
 #' @name vmrPackageCheck
 #' @description Perform a package check into the guest
 #' @details upload the package and run [devtools::check()]
-#'  into the guest machine. (check available in $HOME/vmr/package/pkg)
+#'  into the guest machine. (check available in $HOME/vmr/package/pkg).  
+#'  Checking a directory with multiple files may slower upload, prefer tar.gz file
 #' @param pkg a package directory or a tar.gz file
 #' @return \code{NULL}
 #' @examples
@@ -1065,16 +1124,16 @@ vmrPackageCheck <- function(pkg = "./") {
     to_dir <- basename(normalizePath(pkg))
     to_pkg <- ""
     Rcmds <- paste0(
-      "Rscript -e \"devtools::check('vmr/package/",
-      to_dir, "/", to_pkg, "')\""
+      "Rscript -e \"library(devtools);check(normalizePath('vmr/package/",
+      to_dir, "/", to_pkg, "'), check_dir=normalizePath('vmr/package/", to_dir, "'))\""
     )
   }
   else {
     to_dir <- basename(dirname(normalizePath(pkg)))
     to_pkg <- basename(pkg)
     Rcmds <- paste0(
-      "Rscript -e \"devtools::check_built('vmr/package/",
-      to_dir, "/", to_pkg, "')\""
+      "Rscript -e \"library(devtools);check_built(normalizePath('vmr/package/",
+      to_dir, "/", to_pkg, "'), check_dir=normalizePath('vmr/package/", to_dir, "'))\""
     )
   }
 
@@ -1112,8 +1171,8 @@ vmrPackageBuild <- function(pkg = "./", binary = FALSE) {
   vagrantSSHCommand(paste0("rm -rf vmr/package/", to_dir, "/* 2>&1 > /dev/null"))
   vagrantSSHCommand(paste0("mkdir -p vmr/package/", to_dir, " 2>&1 > /dev/null"))
   Rcmds <- paste0(
-    "Rscript -e \"devtools::build('vmr/package/",
-    to_dir, "/", to_pkg, "', binary=", binary, ")\""
+    "Rscript -e \"library(devtools);build(normalizePath('vmr/package/",
+    to_dir, "/", to_pkg, "'), binary=", binary, ")\""
   )
   vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)
@@ -1144,8 +1203,8 @@ vmrPackageTest <- function(pkg = "./") {
   vagrantSSHCommand(paste0("rm -rf vmr/package/", to_dir, "/* 2>&1 > /dev/null"))
   vagrantSSHCommand(paste0("mkdir -p vmr/package/", to_dir, " 2>&1 > /dev/null"))
   Rcmds <- paste0(
-    "Rscript -e \"devtools::test('vmr/package/",
-    to_dir, "/", to_pkg, "')\""
+    "Rscript -e \"library(devtools);test(normalizePath('vmr/package/",
+    to_dir, "/", to_pkg, "'))\""
   )
   vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)

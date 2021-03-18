@@ -14,22 +14,6 @@
 
 <title>6- Use vmr for development</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -43,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -55,16 +39,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -73,9 +55,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -336,30 +318,30 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="information" class="section level2">
 <h2>Information</h2>
 <p>To get guest information:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">vmrInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">vmrInfo</span>()</a></code></pre></div>
 <p>To send files to guest:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">vmrSend</span>(<span class="kw">c</span>(<span class="st">&quot;myfile1&quot;</span>,<span class="st">&quot;myfile2&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">vmrSend</span>(<span class="kw">c</span>(<span class="st">&quot;myfile1&quot;</span>,<span class="st">&quot;myfile2&quot;</span>))</a></code></pre></div>
 <p>To send and/or run bash commands :</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">vmrProvision</span>(<span class="dt">cmd =</span> <span class="kw">c</span>(<span class="st">&quot;./myscript.sh&quot;</span>), <span class="dt">elts =</span> <span class="kw">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="dt">dest =</span> <span class="st">&quot;/home/vmr/&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">vmrProvision</span>(<span class="dt">cmd =</span> <span class="kw">c</span>(<span class="st">&quot;./myscript.sh&quot;</span>), <span class="dt">elts =</span> <span class="kw">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="dt">dest =</span> <span class="st">&quot;/home/vmr/&quot;</span>)</a></code></pre></div>
 </div>
 <div id="run-r-commands" class="section level2">
 <h2>Run R commands</h2>
 <p>To execute a R command to guest:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">vmrExec</span>(<span class="kw">c</span>(<span class="st">&#39;print(&quot;HelloWorld&quot;)&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">vmrExec</span>(<span class="kw">c</span>(<span class="st">&#39;print(&quot;HelloWorld&quot;)&#39;</span>))</a></code></pre></div>
 <p>To update and install R packages in guest:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">vmrUpdatePackages</span>()</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">vmrInstallPackages</span>(<span class="dt">pkg =</span> <span class="kw">c</span>(<span class="st">&quot;vmr&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">vmrUpdatePackages</span>()</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">vmrInstallPackages</span>(<span class="dt">pkg =</span> <span class="kw">c</span>(<span class="st">&quot;vmr&quot;</span>))</a></code></pre></div>
 </div>
 <div id="package-development" class="section level2">
 <h2>Package development</h2>
 <p>With <strong>vmr</strong> you can test, and build a package in development using this functions:</p>
 <p>To build, check and test:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># check a local package</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">vmrPackageCheck</span>()</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co"># Test it</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="kw">vmrPackageTest</span>()</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># and create archive and package binary</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">vmrPackageBuild</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># check a local package</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw">vmrPackageCheck</span>()</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co"># Test it</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="kw">vmrPackageTest</span>()</a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co"># and create archive and package binary</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="kw">vmrPackageBuild</span>()</a></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>

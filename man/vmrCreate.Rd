@@ -47,6 +47,8 @@ The environment is attached to the current working directory.
 \item \strong{synced_folder}: a list with source and destination
 \item \strong{ssh_user}: the ssh user
 \item \strong{ssh_pwd}: the ssh user password
+\item \strong{ssh_port}: the ssh port
+\item \strong{ssh_private_key_path}: the private ssh key path
 }
 }
 \examples{

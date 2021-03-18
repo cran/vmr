@@ -14,22 +14,6 @@
 
 <title>1- Working with vmr package</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -260,7 +244,8 @@ You can develop, run tests, build packages binaries easily in a clean environmen
 <p>It uses <a href="https://www.vagrantup.com/">Vagrant</a> tool to manage this virtual environments, call <em>boxes</em>. A <strong>box</strong> is a Vagrant environment (bundle) containing a __virtual environment_ (such as a virtual machine) for a specific <strong>provider</strong> (such as <a href="https://www.virtualbox.org/">VirtualBox</a>).<br />
 Official <strong>vmr</strong> boxes list is available here : <a href="https://app.vagrantup.com/VMR/">https://app.vagrantup.com/VMR/</a></p>
 <blockquote>
-<p>Boxes are available for development and test, do not use it for production.</p>
+<p>Boxes use default user and password: <strong>vagrant</strong>.<br />
+Boxes are available for development and test, do not use it for production.</p>
 </blockquote>
 </div>
 <div id="dependencies" class="section level2">

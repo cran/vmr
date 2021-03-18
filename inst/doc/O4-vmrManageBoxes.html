@@ -14,22 +14,6 @@
 
 <title>4- Manage vmr boxes</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -43,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -55,16 +39,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -73,9 +55,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -366,27 +348,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li>a description: for information</li>
 </ul>
 <p>To get this list in R console:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>boxes_list &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</span>
-<span id="cb1-2"><a href="#cb1-2"></a>boxes_list</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">boxes_list &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</a>
+<a class="sourceLine" id="cb1-2" title="2">boxes_list</a></code></pre></div>
 <p>To get information about a specific box:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">vmrListBox</span>(boxes_list<span class="op">$</span>Name[<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">vmrListBox</span>(boxes_list<span class="op">$</span>Name[<span class="dv">1</span>])</a></code></pre></div>
 </div>
 <div id="download-a-box" class="section level2">
 <h2>Download a box</h2>
 <p>Box download is automatic in a <strong>vmr</strong> environement, but if you need to download it manualy, you can:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">vmrBoxDownload</span>(vmr_env)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">vmrBoxDownload</span>(vmr_env)</a></code></pre></div>
 </div>
 <div id="manage-boxes" class="section level2">
 <h2>Manage boxes</h2>
 <p>You can manage downloaded boxes with this functions:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># List downloaded boxes</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">vmrLocalBoxList</span>()</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Remove old boxes (not up to date)</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="kw">vmrLocalBoxPrune</span>()</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># Remove a specific box</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="kw">vmrLocalBoxRemove</span>(<span class="op">&lt;</span>box name<span class="op">&gt;</span>)</span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># Download the last box version (use in a __vmr__ environment)</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">vmrLocalBoxUpdate</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># List downloaded boxes</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">vmrLocalBoxList</span>()</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co"># Remove old boxes (not up to date)</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="kw">vmrLocalBoxPrune</span>()</a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co"># Remove a specific box</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="kw">vmrLocalBoxRemove</span>(<span class="op">&lt;</span>box name<span class="op">&gt;</span>)</a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co"># Download the last box version (use in a __vmr__ environment)</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="kw">vmrLocalBoxUpdate</span>()</a></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>

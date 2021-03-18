@@ -154,7 +154,7 @@ virtualboxOptions <- function(details = TRUE) {
       "linked_clone: if TRUE use Master virtual machine and clone disk\n",
       "\t be careful, it speed box creation and reduce overhead but clones are connected to master\n"
     )
-    cat("check_guest_additions: if TRUE (default) check if Guest Additions is installed\n")
+    cat("check_guest_additions: if TRUE check if Guest Additions is installed (default FALSE)\n")
     cat(
       "modifyvm: list of virtualbox options to set.\n",
       "https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm\n",
@@ -167,7 +167,7 @@ virtualboxOptions <- function(details = TRUE) {
     name = "",
     nic_type = "",
     linked_clone = FALSE,
-    check_guest_additions = TRUE,
+    check_guest_additions = FALSE,
     modifyvm = list(cpus = "2", memory = "4096")
   ))
 }

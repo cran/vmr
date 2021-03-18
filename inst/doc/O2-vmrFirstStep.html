@@ -14,22 +14,6 @@
 
 <title>2- vmr package first step</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -43,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -55,16 +39,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -73,9 +55,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -343,22 +325,22 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="to-start" class="section level1">
 <h1>To Start</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#install.packages(c(&#39;vmr&#39;))</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(vmr)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">vmrSetVerbose</span>(<span class="st">&quot;Full&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#install.packages(c(&#39;vmr&#39;))</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(vmr)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">vmrSetVerbose</span>(<span class="st">&quot;Full&quot;</span>)</a></code></pre></div>
 <div id="list-available-environment-boxes" class="section level2">
 <h2>List available environment (boxes)</h2>
 <p>Boxes are listed from <a href="https://app.vagrantup.com/VMR/">https://app.vagrantup.com/VMR/</a>.<br />
 Mainly you’ve got the OS, the R version installed (follow by a timestamp) and the provider available.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>list_boxes &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">print</span>(list_boxes)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">list_boxes &lt;-<span class="st"> </span><span class="kw">vmrList</span>()</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">print</span>(list_boxes)</a></code></pre></div>
 </div>
 <div id="create-a-vmr-object" class="section level2">
 <h2>Create a <strong>vmr</strong> object</h2>
 <p>To create a minimal <strong>vmr</strong> object you need the <em>name</em> and the <em>provider</em> of a box (default <em>version</em> is “<em>latest</em>”).</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>index &lt;-<span class="st"> </span><span class="kw">which</span>(list_boxes<span class="op">$</span>Name <span class="op">==</span><span class="st"> &quot;LinuxMint20-R&quot;</span>)[<span class="dv">1</span>]</span>
-<span id="cb3-2"><a href="#cb3-2"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="dt">name =</span> list_boxes<span class="op">$</span>Name[index], <span class="dt">provider =</span> list_boxes<span class="op">$</span>Provider[<span class="dv">1</span>])</span>
-<span id="cb3-3"><a href="#cb3-3"></a>vmr_env</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">index &lt;-<span class="st"> </span><span class="kw">which</span>(list_boxes<span class="op">$</span>Name <span class="op">==</span><span class="st"> &quot;LinuxMint20-R&quot;</span>)[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb3-2" title="2">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="dt">name =</span> list_boxes<span class="op">$</span>Name[index], <span class="dt">provider =</span> list_boxes<span class="op">$</span>Provider[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb3-3" title="3">vmr_env</a></code></pre></div>
 </div>
 <div id="initialize-the-vmr-environment" class="section level2">
 <h2>Initialize the <strong>vmr</strong> environment</h2>
@@ -367,7 +349,7 @@ Mainly you’ve got the OS, the R version installed (follow by a timestamp) and 
 This function have to be re-call if <strong>vmr_env</strong> object is modified.<br />
 When initializing environment the box with same name, version and provider, will be download once. It can be long depending of the box size and network bandwide. The box is save in vagrant environment (“~/.vagrant.d/”).</p>
 </blockquote>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env)</a></code></pre></div>
 <blockquote>
 <p>Note : when <strong>vmr</strong> environment is initialize, no more need to recreate <em>vmr_env</em> for further use (unless for specific case). Use <strong>vmrLoad()</strong> in that case to recreate the <strong>vmr</strong> object <em>vmr_env</em>.</p>
 </blockquote>
@@ -377,19 +359,19 @@ When initializing environment the box with same name, version and provider, will
 <p>To start an environment:<br />
 &gt; This start the virtual environment using the <strong>vmr directory</strong> and the <strong>Vagrantfile template</strong>.<br />
 <strong>Be sure to always be in the same working directory.</strong></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">vmrStart</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">vmrStart</span>()</a></code></pre></div>
 <p>Now enjoy using R console, the virtual environment GUI or both.</p>
 <p>To get vmr Status:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">vmrStatus</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">vmrStatus</span>()</a></code></pre></div>
 </div>
 <div id="stop-vmr-environment" class="section level2">
 <h2>Stop <strong>vmr</strong> environment</h2>
 <p>To save the current state and stop the environment:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">vmrSuspend</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">vmrSuspend</span>()</a></code></pre></div>
 <p>To resume an environment previously suspended:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">vmrResume</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">vmrResume</span>()</a></code></pre></div>
 <p>To stop the environment (<em>powerOff</em>):</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">vmrStop</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">vmrStop</span>()</a></code></pre></div>
 </div>
 </div>
 <div id="vignettes-summary" class="section level1">

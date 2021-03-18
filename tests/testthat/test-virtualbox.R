@@ -3,7 +3,7 @@ vb.opts <- list(
   name = "",
   nic_type = "",
   linked_clone = FALSE,
-  check_guest_additions = TRUE,
+  check_guest_additions = FALSE,
   modifyvm = list(cpus = "2", memory = "4096")
 )
 
@@ -17,7 +17,7 @@ vb.vagrantfile <- c(
   'config.vm.provider "virtualbox" do |vb|',
   "vb.gui = true",
   "vb.linked_clone = false",
-  "vb.check_guest_additions = true",
+  "vb.check_guest_additions = false",
   'vb.customize ["modifyvm", :id, "--cpus", "2"]',
   'vb.customize ["modifyvm", :id, "--memory", "4096"]',
   "end"

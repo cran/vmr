@@ -2,8 +2,8 @@ Package: vmr
 Type: Package
 Encoding: UTF-8
 Title: Virtual Machines for R
-Version: 0.0.2
-Date: 2021-02-19
+Version: 0.0.3
+Date: 2021-03-18
 Authors@R: c(person("Jean-François", "Rey", role = c("cre","aut"), email = "jf.rey.public@gmail.com"))
 Maintainer: Jean-François Rey <jf.rey.public@gmail.com>
 Description: Manage, provision and use Virtual Machines pre-configured for R.
@@ -25,7 +25,7 @@ RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown, testthat (>= 3.0.0), ssh
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Packaged: 2021-02-19 10:14:58 UTC; jfrey
+Packaged: 2021-03-18 20:20:59 UTC; jfrey
 Author: Jean-François Rey [cre, aut]
 Repository: CRAN
-Date/Publication: 2021-02-20 01:30:03 UTC
+Date/Publication: 2021-03-18 20:50:02 UTC

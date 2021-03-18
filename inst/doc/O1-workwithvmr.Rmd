@@ -21,7 +21,8 @@ You can develop, run tests, build packages binaries easily in a clean environmen
 It uses [Vagrant](https://www.vagrantup.com/) tool to manage this virtual environments, call _boxes_. A __box__ is a Vagrant environment (bundle) containing a __virtual environment_ (such as a virtual machine) for a specific __provider__ (such as [VirtualBox](https://www.virtualbox.org/)).    
 Official __vmr__ boxes list is available here :  [https://app.vagrantup.com/VMR/](https://app.vagrantup.com/VMR/)  
 
-> Boxes are available for development and test, do not use it for production.
+> Boxes use default user and password: __vagrant__.  
+Boxes are available for development and test, do not use it for production.
 
 ## Dependencies
 
