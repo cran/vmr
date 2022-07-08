@@ -25,7 +25,15 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
@@ -329,7 +337,7 @@ Options available can be find here:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">vb.opt<span class="op">$</span>gui &lt;-<span class="st"> </span><span class="ot">FALSE</span></a></code></pre></div>
 <p>To add more cpus and memory:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">vb.opt<span class="op">$</span>modifyvm<span class="op">$</span>cpus &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb4-2" title="2">vb.opt<span class="op">$</span>modifiy<span class="op">$</span>memory &lt;-<span class="st"> </span><span class="dv">8192</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-2" title="2">vb.opt<span class="op">$</span>modifyvm<span class="op">$</span>memory &lt;-<span class="st"> </span><span class="dv">8192</span></a></code></pre></div>
 <p>More options can be find here <a href="https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm">https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm</a></p>
 </div>
 <div id="vignette-summary" class="section level2">

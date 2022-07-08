@@ -14,15 +14,20 @@ vignette: >
 
 You can set up a __vmr__ environment to use it in CI/CD pipelines.
 
-Once you set up your __vmr__ environment take a snapshot of it.
+
 
 ```{r eval=FALSE}
+vmrStart()
+# do what you want
 vmrTakeSnapshot("cicdversionR")
 ```
 
 ## GitLab Runner CI/CD
 
-Then you can get the command to run, to add it as a GitLab Runner:
+> Using gitlab-runner >= 15.0.0 the option ```[runners.ssh.disable_strict_host_key_checking]``` have to be set to ```true```.  
+
+
+Then you can get the command to run, to add it as a GitLab Runner (this will also configure the guest VM) :
 ```{r eval=FALSE}
 virtualboxGitlabRunner(vmr_env,
                        gitlab_url = "gitlab.com",
@@ -30,7 +35,16 @@ virtualboxGitlabRunner(vmr_env,
                        snapshot_name = "cicdversionR",
                        vm_name = <VirtualBox VM Name>)
 ```
-Copy and paste the return command in a terminal where GitLab Runner and the __vmr__ environment are installed.
+Copy and paste the return command in a terminal where GitLab Runner and the __vmr__ environment are installed (be careful with user right on Gitlab Runner and __vmr__ environment).
+
+## Snapshot
+
+Once you set up your __vmr__ environment and configure CI/CD take a snapshot of it (snapshot name as to be the same as given into _virtualboxGitlabRunner_).
+
+```{r eval=FALSE}
+vmrTakeSnapshot("cicdversionR")
+vmrStop()
+```
 
 ## Vignette summary
 

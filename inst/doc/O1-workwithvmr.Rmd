@@ -24,6 +24,8 @@ Official __vmr__ boxes list is available here :  [https://app.vagrantup.com/VMR/
 > Boxes use default user and password: __vagrant__.  
 Boxes are available for development and test, do not use it for production.
 
+Take a [quick overview](vmrPoster.pdf) from userR2022 poster presentation.
+
 ## Dependencies
 
 The __vmr__ package needs two tools to work __Vagrant__ to manage boxes and a __provider__ to instantiate the virtual environment.  

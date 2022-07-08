@@ -30,8 +30,8 @@
 #' @details \tabular{ll}{
 #'          Package: \tab vmr\cr
 #'          Type: \tab Package\cr
-#'          Version: \tab 0.0.3\cr
-#'          Date: \tab 2021-03-18\cr
+#'          Version: \tab 0.0.4\cr
+#'          Date: \tab 2022-07-08\cr
 #'          License: \tab GPL (>=3)\cr
 #'          }
 #' @details This package is a wrap of the [Vagrant](https://www.vagrantup.com/)

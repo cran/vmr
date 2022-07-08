@@ -1,4 +1,6 @@
 ## ----eval=FALSE---------------------------------------------------------------
+#  vmrStart()
+#  # do what you want
 #  vmrTakeSnapshot("cicdversionR")
 
 ## ----eval=FALSE---------------------------------------------------------------
@@ -7,4 +9,8 @@
 #                         gt_token = "<mytoken>",
 #                         snapshot_name = "cicdversionR",
 #                         vm_name = <VirtualBox VM Name>)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  vmrTakeSnapshot("cicdversionR")
+#  vmrStop()
 

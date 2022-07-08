@@ -37,7 +37,7 @@ vb.opt$gui <- FALSE
 To add more cpus and memory:  
 ```{r eval=FALSE}
 vb.opt$modifyvm$cpus <- 3
-vb.opt$modifiy$memory <- 8192
+vb.opt$modifyvm$memory <- 8192
 ```
 
 More options can be find here [https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm](https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)  

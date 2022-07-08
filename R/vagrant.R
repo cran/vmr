@@ -76,18 +76,21 @@ vagrantBoxList <- function() {
   args <- c("box", "list")
   out <- vagrantExec(args, stdout = TRUE)
 
-  df_box <- data.frame()
-  l_box <- lapply(out, FUN = function(l) {
-    lp <- strsplit(l, "[ ]+")
-    df_box <<- rbind(
-      df_box,
-      c(
-        lp[[1]][1],
-        substr(lp[[1]][2], start = 2, stop = nchar(lp[[1]][2]) - 1),
-        substr(lp[[1]][3], start = 1, stop = nchar(lp[[1]][3]) - 1)
+  df_box <- data.frame(Name = character(0), Provider = character(0), Version = character(0))
+  
+  if( length(grep("There are no installed boxes!",out)) == 0L ) {
+    l_box <- lapply(out, FUN = function(l) {
+      lp <- strsplit(l, "[ ]+")
+      df_box <<- rbind(
+        df_box,
+        c(
+          lp[[1]][1],
+          substr(lp[[1]][2], start = 2, stop = nchar(lp[[1]][2]) - 1),
+          substr(lp[[1]][3], start = 1, stop = nchar(lp[[1]][3]) - 1)
+        )
       )
-    )
-  })
+    })
+  }
   colnames(df_box) <- c("Name", "Provider", "Version")
 
   return(df_box)
@@ -120,7 +123,7 @@ vagrantBoxUpdate <- function(box = "", provider = "") {
 vagrantBoxRemove <- function(name, provider = "", version = "", force = FALSE) {
   args <- c("box", "remove")
   if (nchar(provider) > 0) args <- c(args, "--provider", provider)
-  if (nchar(version) > 0) args <- c(args, "--box-verison", version)
+  if (nchar(version) > 0) args <- c(args, "--box-version", version)
   if (force) args <- c(args, "--force")
   args <- c(args, name)
   vagrantExec(args)

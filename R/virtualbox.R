@@ -225,7 +225,7 @@ virtualboxReadOptions <- function(text_vector) {
 #' @description Configure the guest VM to be use as a GitLab Runner
 #'  and return the command to run in shell to register it.
 #' @param vmr a __vmr__ object
-#' @param gitlab_url a GitLab URL
+#' @param gitlab_url a GitLab URL with protocol (http or https)
 #' @param gt_token a GitLab registration token
 #' @param snapshot_name name of a snapshot to use if any
 #' @param vm_name the 'VitualBox' VM name if not specified in 'vmr' object provider_options.
@@ -238,22 +238,29 @@ virtualboxReadOptions <- function(text_vector) {
 #' @export
 #' @md
 virtualboxGitlabRunner <- function(vmr, gitlab_url, gt_token, snapshot_name = "", vm_name = "") {
+  gitlab_url_tmp <- gsub("?(f|ht)tp(s?)://", "", gitlab_url)
+  gitlab_url_tmp <- gsub("/$", "", gitlab_url_tmp)
+  if(gitlab_url_tmp == gitlab_url) {
+    stop(paste0("GitLab URL seems incorrect ", gitlab_url))
+  }
+  
   printVerbose(1, "Configuring guest machine...\n")
   vagrantSSHCommand("mkdir -p ~/.ssh")
-  vagrantSSHCommand("touch ~/.ssh/know_hosts")
-  vagrantSSHCommand(paste0("ssh-keyscan -t ecdsa -H ", gitlab_url, " >> ~/.ssh/know_hosts"))
+  vagrantSSHCommand("touch ~/.ssh/known_hosts")
+  vagrantSSHCommand(paste0("ssh-keyscan -t ecdsa -H ", gitlab_url_tmp, " >> ~/.ssh/known_hosts"))
 
   printVerbose(2, "Run this command in a shell to enable the VM as a GitLab Runner:")
   cmd <- paste0(
     "gitlab-runner register ",
     "--non-interactive ",
     "--name ", paste0(vmr$org, "-", vmr$box), " ",
-    "--url ", paste0("https://", gitlab_url), " ",
+    "--url ", gitlab_url, " ",
     "--registration-token ", gt_token, " ",
     "--executor 'virtualbox' ",
     "--tag-list vmr,R4 ",
     "--ssh-user ", vmr$ssh_user, " ",
     "--ssh-password ", vmr$ssh_pwd, " ",
+    "--ssh-disable-strict-host-key-checking true ",
     if (vm_name != "") {
       paste0("--virtualbox-base-name '", vm_name, "' ")
     } else {
@@ -266,7 +273,7 @@ virtualboxGitlabRunner <- function(vmr, gitlab_url, gt_token, snapshot_name = ""
     if (snapshot_name != "") {
       paste0("--virtualbox-base-snapshot='", snapshot_name, "' ")
     },
-    "--virtualbox-disable-snapshots=false"
+    "--virtualbox-disable-snapshots"
   )
 
   printVerbose(2, cmd)

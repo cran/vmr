@@ -1,0 +1,9 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{9 - Poster}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\includepdf[pages=1, fitpaper=true, rotateoversize]{VMRPosteruseR2022.pdf}
+\end{document}
+

@@ -620,7 +620,7 @@ vmrMountDir <- function(vmr, src = "", dest = "") {
 vmrLocalBoxList <- function() {
   box_list <- vagrantBoxList()
   printVerbose(2, "This is all boxes available in your system: ")
-  printVerbose(2, box_list)
+  # printVerbose(2, box_list)
   return(box_list)
 }
 
@@ -727,6 +727,21 @@ vmrListSnapshot <- function() {
   ## TODO return the list name
   return(NULL)
 }
+
+#' @title remove a snapshot of the guest machine
+#' @name vmrRemoveSnapshot
+#' @description remove a snapshot of the guest machine
+#' @param snap_name the snapshot name
+#' @return \code{NULL}
+#' @export
+#' @md
+vmrRemoveSnapshot <- function(snap_name) {
+  printVerbose(1, "Delete a snapshot: ", snap_name)
+  vagrantSnapshot("delete", snap_name)
+  ## TODO return the list name
+  return(NULL)
+}
+
 
 #' @title Save state and stop guest machine
 #' @name vmrSuspend
@@ -959,6 +974,8 @@ vmrSend <- function(elt = c()) {
   return(invisible(res))
 }
 
+# TODO implement vmrGet to download form guest files/directories
+
 #' @title Execute R methods into guest machine
 #' @name vmrExec
 #' @description Run R method into guest machine.
@@ -1176,6 +1193,7 @@ vmrPackageBuild <- function(pkg = "./", binary = FALSE) {
   )
   vmrProvision(cmd = Rcmds, elts = pkg, dest = paste0("vmr/package/", to_dir, "/"))
   return(NULL)
+  # TODO return path to package binary in guest
 }
 
 #' @title Test a package into a guest machine

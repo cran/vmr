@@ -9,5 +9,5 @@
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  vb.opt$modifyvm$cpus <- 3
-#  vb.opt$modifiy$memory <- 8192
+#  vb.opt$modifyvm$memory <- 8192
 

@@ -27,7 +27,7 @@ getInfo <- function() {
   message(utils::packageVersion("vmr"))
   message("License: GPLV3")
   message("'vmr' package is under development")
-  message("Be comprehensible and feedback are wellcome.")
+  message("Be comprehensible and feedback are welcome.")
   message("Do not use virtual machine for production!")
   message("Enjoy!")
 }

@@ -25,7 +25,15 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
@@ -314,6 +322,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <ul>
 <li><a href="#cicd">CI/CD</a><ul>
 <li><a href="#gitlab-runner-cicd">GitLab Runner CI/CD</a></li>
+<li><a href="#snapshot">Snapshot</a></li>
 <li><a href="#vignette-summary">Vignette summary</a><ul>
 <li><a href="#next-vignette-8--functions-resume">Next vignette : <span>8- Functions resume</span></a></li>
 </ul></li>
@@ -324,17 +333,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="cicd" class="section level1">
 <h1>CI/CD</h1>
 <p>You can set up a <strong>vmr</strong> environment to use it in CI/CD pipelines.</p>
-<p>Once you set up your <strong>vmr</strong> environment take a snapshot of it.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">vmrStart</span>()</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co"># do what you want</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</a></code></pre></div>
 <div id="gitlab-runner-cicd" class="section level2">
 <h2>GitLab Runner CI/CD</h2>
-<p>Then you can get the command to run, to add it as a GitLab Runner:</p>
+<blockquote>
+<p>Using gitlab-runner &gt;= 15.0.0 the option <code>[runners.ssh.disable_strict_host_key_checking]</code> have to be set to <code>true</code>.</p>
+</blockquote>
+<p>Then you can get the command to run, to add it as a GitLab Runner (this will also configure the guest VM) :</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">virtualboxGitlabRunner</span>(vmr_env,</a>
 <a class="sourceLine" id="cb2-2" title="2">                       <span class="dt">gitlab_url =</span> <span class="st">&quot;gitlab.com&quot;</span>,</a>
 <a class="sourceLine" id="cb2-3" title="3">                       <span class="dt">gt_token =</span> <span class="st">&quot;&lt;mytoken&gt;&quot;</span>,</a>
 <a class="sourceLine" id="cb2-4" title="4">                       <span class="dt">snapshot_name =</span> <span class="st">&quot;cicdversionR&quot;</span>,</a>
 <a class="sourceLine" id="cb2-5" title="5">                       <span class="dt">vm_name =</span> <span class="op">&lt;</span>VirtualBox VM Name<span class="op">&gt;</span>)</a></code></pre></div>
-<p>Copy and paste the return command in a terminal where GitLab Runner and the <strong>vmr</strong> environment are installed.</p>
+<p>Copy and paste the return command in a terminal where GitLab Runner and the <strong>vmr</strong> environment are installed (be careful with user right on Gitlab Runner and <strong>vmr</strong> environment).</p>
+</div>
+<div id="snapshot" class="section level2">
+<h2>Snapshot</h2>
+<p>Once you set up your <strong>vmr</strong> environment and configure CI/CD take a snapshot of it (snapshot name as to be the same as given into <em>virtualboxGitlabRunner</em>).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">vmrStop</span>()</a></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>
