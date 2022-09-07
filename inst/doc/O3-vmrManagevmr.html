@@ -14,6 +14,19 @@
 
 <title>3- Manage vmr environment</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -35,26 +48,28 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -63,9 +78,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -105,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -320,26 +342,38 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#clarification">Clarification</a></li>
-<li><a href="#create-a-vmr-environment">Create a <strong>vmr</strong> environment</a></li>
-<li><a href="#initialize-a-vmr-environment">Initialize a <strong>vmr</strong> environment</a></li>
-<li><a href="#add-options-to-vmr-environment">Add options to vmr environment</a></li>
-<li><a href="#manipulate-a-vmr-environment">Manipulate a <strong>vmr</strong> environment</a></li>
-<li><a href="#vignette-summary">Vignette summary</a></li>
+<li><a href="#clarification" id="toc-clarification">Clarification</a></li>
+<li><a href="#create-a-vmr-environment" id="toc-create-a-vmr-environment">Create a <strong>vmr</strong>
+environment</a></li>
+<li><a href="#initialize-a-vmr-environment" id="toc-initialize-a-vmr-environment">Initialize a <strong>vmr</strong>
+environment</a></li>
+<li><a href="#add-options-to-vmr-environment" id="toc-add-options-to-vmr-environment">Add options to vmr
+environment</a></li>
+<li><a href="#manipulate-a-vmr-environment" id="toc-manipulate-a-vmr-environment">Manipulate a <strong>vmr</strong>
+environment</a></li>
+<li><a href="#vignette-summary" id="toc-vignette-summary">Vignette
+summary</a></li>
 </ul>
 </div>
 
 <div id="clarification" class="section level2">
 <h2>Clarification</h2>
-<p>A <strong>vmr</strong> environment consist of a <strong>directory</strong> and a template file call <strong>Vagrantfile</strong>.<br />
-A <em>vmr</em> object contains information to create and modify an <strong>vmr</strong> environment. Once the environment created and initialized the <em>vmr</em> object became optional and only the <strong>working directory</strong> and the <strong>Vagrantfile</strong> are the managers.</p>
+<p>A <strong>vmr</strong> environment consist of a
+<strong>directory</strong> and a template file call
+<strong>Vagrantfile</strong>.<br />
+A <em>vmr</em> object contains information to create and modify an
+<strong>vmr</strong> environment. Once the environment created and
+initialized the <em>vmr</em> object became optional and only the
+<strong>working directory</strong> and the <strong>Vagrantfile</strong>
+are the managers.</p>
 </div>
 <div id="create-a-vmr-environment" class="section level2">
 <h2>Create a <strong>vmr</strong> environment</h2>
 <div id="create-a-vmr-object" class="section level3">
 <h3>Create a <em>vmr</em> object</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrCreate</span>(<span class="op">&lt;</span>boxname<span class="op">&gt;</span>)</a></code></pre></div>
-<p><em>vmrCreate()</em> function create a <em>vmr</em> object using several arguments:<br />
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrCreate</span>(<span class="sc">&lt;</span>boxname<span class="sc">&gt;</span>)</span></code></pre></div>
+<p><em>vmrCreate()</em> function create a <em>vmr</em> object using
+several arguments:<br />
 * name : the box name (from <em>vmrList()</em>)<br />
 * provider: the provider name (from <em>vmrList()</em>)<br />
 * version: (optional by default latest version is use)<br />
@@ -347,88 +381,101 @@ A <em>vmr</em> object contains information to create and modify an <strong>vmr</
 </div>
 <div id="load-a-vmr-object" class="section level3">
 <h3>Load a <em>vmr</em> object</h3>
-<p>Set the working directory to a <strong>vmr</strong> environment who was already initialized.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;path/to/my/vmr/environment/&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</a>
-<a class="sourceLine" id="cb2-3" title="3">vmr_env</a></code></pre></div>
+<p>Set the working directory to a <strong>vmr</strong> environment who
+was already initialized.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;path/to/my/vmr/environment/&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrLoad</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>vmr_env</span></code></pre></div>
 </div>
 </div>
 <div id="initialize-a-vmr-environment" class="section level2">
 <h2>Initialize a <strong>vmr</strong> environment</h2>
-<p>Initialize a <strong>vmr</strong> environment will create a <em>Vagrantfile</em> template into the working directory and download the box associated.</p>
+<p>Initialize a <strong>vmr</strong> environment will create a
+<em>Vagrantfile</em> template into the working directory and download
+the box associated.</p>
 <blockquote>
-<p>The box download can be long depending of the box size and network bandwide. The box is save in vagrant environment (“~/.vagrant.d/”).</p>
+<p>The box download can be long depending of the box size and network
+bandwide. The box is save in vagrant environment (“~/.vagrant.d/”).</p>
 </blockquote>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">vmr_env <span class="co"># created or loaded object</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co"># force.vagrantfile will override existing Vagrantfile template</span></a>
-<a class="sourceLine" id="cb3-3" title="3">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrInitEnv</span>(vmr_env, <span class="dt">force.vagrantfile=</span><span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="co"># created or loaded object</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># force.vagrantfile will override existing Vagrantfile template</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrInitEnv</span>(vmr_env, <span class="at">force.vagrantfile=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <div id="clean-a-vmr-environment" class="section level3">
 <h3>Clean a <strong>vmr</strong> environment</h3>
-<p>To remove any file created, boxes downloaded and provider instance run this commands:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrLoad</span>()</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co"># provider cleaning</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="kw">vmrDestroy</span>(vmr_env<span class="op">$</span>id)</a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co"># box cleaning</span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="kw">vmrLocalBoxRemove</span>(vmr_env<span class="op">$</span>box, <span class="dt">provider =</span> vmr_env<span class="op">$</span>provider, <span class="dt">version =</span> vmr_env<span class="op">$</span>version)</a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co"># remove the working directory</span></a></code></pre></div>
+<p>To remove any file created, boxes downloaded and provider instance
+run this commands:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrLoad</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># provider cleaning</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrDestroy</span>(vmr_env<span class="sc">$</span>id)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># box cleaning</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrLocalBoxRemove</span>(vmr_env<span class="sc">$</span>box, <span class="at">provider =</span> vmr_env<span class="sc">$</span>provider, <span class="at">version =</span> vmr_env<span class="sc">$</span>version)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the working directory</span></span></code></pre></div>
 </div>
 </div>
 <div id="add-options-to-vmr-environment" class="section level2">
 <h2>Add options to vmr environment</h2>
-<p>Several functions need and can modify a <em>vmr</em> object to add options to the environment.<br />
-<em>vmrInitEnv()</em> have to be recall at <em>vmr</em> object modification.</p>
+<p>Several functions need and can modify a <em>vmr</em> object to add
+options to the environment.<br />
+<em>vmrInitEnv()</em> have to be recall at <em>vmr</em> object
+modification.</p>
 <div id="upgrade-environment" class="section level3">
 <h3>Upgrade environment</h3>
-<p>It’s possible to upgrade an environment to use the latest box version.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrUpdateEnvVersion</span>(vmr_env)</a></code></pre></div>
+<p>It’s possible to upgrade an environment to use the latest box
+version.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrUpdateEnvVersion</span>(vmr_env)</span></code></pre></div>
 </div>
 <div id="shared-files" class="section level3">
 <h3>Shared files</h3>
 <p>To share a host directory to the guest.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">vmr_env &lt;-<span class="st"> </span><span class="kw">vmrMountDir</span>(vmr_env, <span class="dt">src =</span> <span class="st">&quot;/&quot;</span> , <span class="dt">dest =</span> <span class="st">&quot;/&quot;</span> )</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>vmr_env <span class="ot">&lt;-</span> <span class="fu">vmrMountDir</span>(vmr_env, <span class="at">src =</span> <span class="st">&quot;/&quot;</span> , <span class="at">dest =</span> <span class="st">&quot;/&quot;</span> )</span></code></pre></div>
 </div>
 </div>
 <div id="manipulate-a-vmr-environment" class="section level2">
 <h2>Manipulate a <strong>vmr</strong> environment</h2>
 <p>This functions manage the environment instance.<br />
-They have to be call in <strong>vmr</strong> environment (working directory), with no arguments.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># Get environment status</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="kw">vmrStatus</span>()</a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="co"># Start a provider instance</span></a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="kw">vmrStart</span>()</a>
-<a class="sourceLine" id="cb7-5" title="5"><span class="co"># Save state and stop provider instance</span></a>
-<a class="sourceLine" id="cb7-6" title="6"><span class="kw">vmrSuspend</span>()</a>
-<a class="sourceLine" id="cb7-7" title="7"><span class="co"># Resume a saved provider instance</span></a>
-<a class="sourceLine" id="cb7-8" title="8"><span class="kw">vmrResume</span>()</a>
-<a class="sourceLine" id="cb7-9" title="9"><span class="co"># Stop a provider instance</span></a>
-<a class="sourceLine" id="cb7-10" title="10"><span class="kw">vmrStop</span>()</a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="co"># Remove a provider instance</span></a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="kw">vmrDestroy</span>()</a></code></pre></div>
+They have to be call in <strong>vmr</strong> environment (working
+directory), with no arguments.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get environment status</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrStatus</span>()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Start a provider instance</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrStart</span>()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Save state and stop provider instance</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrSuspend</span>()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Resume a saved provider instance</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrResume</span>()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Stop a provider instance</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrStop</span>()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove a provider instance</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrDestroy</span>()</span></code></pre></div>
 <div id="snapshot" class="section level3">
 <h3>Snapshot</h3>
 <p>Manage provider instance with snapshot.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># Take a snapshot</span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="co"># resume a snapshot</span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="kw">vmrRestoreSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="co"># list snapshots</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="kw">vmrListSnapshot</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a snapshot</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrTakeSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># resume a snapshot</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrRestoreSnapshot</span>(<span class="st">&quot;my snapshot&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># list snapshots</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrListSnapshot</span>()</span></code></pre></div>
 </div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>
 <ol style="list-style-type: decimal">
-<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong> package</a></li>
+<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong>
+package</a></li>
 <li><a href="O2-vmrFirstStep.html">Start my first environment</a></li>
-<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong> environment</a></li>
+<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong>
+environment</a></li>
 <li><a href="O4-vmrManageBoxes.html">Manage boxes</a></li>
 <li><a href="O5-vmrManageProviders.html">Manage providers</a></li>
-<li><a href="O6-vmrDev.html">Development with <strong>vmr</strong></a></li>
+<li><a href="O6-vmrDev.html">Development with
+<strong>vmr</strong></a></li>
 <li><a href="O7-vmrcicd.html">CI/CD</a></li>
 <li><a href="O8-vmrResume.html">Functions resume</a></li>
 </ol>
 <div id="next-vignette-4-manage-boxes" class="section level3">
-<h3>Next vignette : <a href="O4-vmrManageBoxes.html">4-Manage Boxes</a></h3>
+<h3>Next vignette : <a href="O4-vmrManageBoxes.html">4-Manage
+Boxes</a></h3>
 </div>
 </div>
 

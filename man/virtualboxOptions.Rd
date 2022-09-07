@@ -10,7 +10,9 @@ virtualboxOptions(details = TRUE)
 \item{details}{if TRUE print options (default), otherwise only return default options}
 }
 \value{
-A default list of options\if{html}{\out{<div class="r">}}\preformatted{list(
+A default list of options
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{list(
 gui = TRUE,
 name = NULL,
 nic_type = NULL,
@@ -25,7 +27,9 @@ List available options for 'VirtualBox' provider
 }
 \details{
 Get the 'VirtualBox' default options.
-It return a list as follow:\if{html}{\out{<div class="r">}}\preformatted{list(
+It return a list as follow:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{list(
 gui = TRUE,
 name = NULL,
 nic_type = NULL,

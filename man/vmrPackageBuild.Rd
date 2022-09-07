@@ -18,6 +18,6 @@ vmrPackageBuild(pkg = "./", binary = FALSE)
 Build a package bundle or binary into the guest machine.
 }
 \details{
-upload the package and run \code{\link[devtools:build]{devtools::build()}}
+upload the package and run devtools::build()
 (build available in $HOME/vmr/package/pkg) in the current \strong{vmr} environment.
 }

@@ -22,7 +22,7 @@ test_that("VagrantFile write", {
 
   expect_snapshot_file(path,
     name = paste0(basename(path), ".default"),
-    binary = FALSE, cran = FALSE
+    cran = FALSE
   )
 
 
@@ -34,7 +34,7 @@ test_that("VagrantFile write", {
 
   expect_snapshot_file(path,
     name = paste0(basename(path), ".mount"),
-    binary = FALSE, cran = FALSE
+    cran = FALSE
   )
 
   vmr_vb$provider <- "virtualbox"
@@ -45,7 +45,7 @@ test_that("VagrantFile write", {
 
   expect_snapshot_file(path,
     name = paste0(basename(path), ".virtualbox"),
-    binary = FALSE, cran = FALSE
+    cran = FALSE
   )
 
   vmr_ssh <- vmr_env
@@ -58,7 +58,7 @@ test_that("VagrantFile write", {
 
   expect_snapshot_file(path,
     name = paste0(basename(path), ".ssh"),
-    binary = FALSE, cran = FALSE
+    cran = FALSE
   )
 
   file.remove("Vagrantfile")

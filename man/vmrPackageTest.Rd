@@ -17,6 +17,6 @@ Test a package into a guest machine
 }
 \details{
 Perform a package check into the guest machine
-of the current \strong{vmr} environment using \code{\link[devtools:test]{devtools::test()}}.
+of the current \strong{vmr} environment using devtools::test().
 (tests are available in $HOME/vmr/package/pkg)
 }

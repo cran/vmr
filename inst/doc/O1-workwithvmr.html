@@ -14,6 +14,19 @@
 
 <title>1- Working with vmr package</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -227,12 +240,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#the-vmr-package">The <strong>vmr</strong> package</a><ul>
-<li><a href="#presentation">Presentation</a></li>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#install">Install</a></li>
+<li><a href="#the-vmr-package" id="toc-the-vmr-package">The
+<strong>vmr</strong> package</a>
+<ul>
+<li><a href="#presentation" id="toc-presentation">Presentation</a></li>
+<li><a href="#dependencies" id="toc-dependencies">Dependencies</a></li>
+<li><a href="#install" id="toc-install">Install</a></li>
 </ul></li>
-<li><a href="#go-further">Go further</a></li>
+<li><a href="#go-further" id="toc-go-further">Go further</a></li>
 </ul>
 </div>
 
@@ -240,21 +255,32 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1>The <strong>vmr</strong> package</h1>
 <div id="presentation" class="section level2">
 <h2>Presentation</h2>
-<p>The <strong>vmr</strong> package allow you to manage <strong>virtual environment</strong> with and for <strong>R</strong>.<br />
-You can develop, run tests, build packages binaries easily in a clean environment with R pre-installed and configured.</p>
-<p>It uses <a href="https://www.vagrantup.com/">Vagrant</a> tool to manage this virtual environments, call <em>boxes</em>. A <strong>box</strong> is a Vagrant environment (bundle) containing a __virtual environment_ (such as a virtual machine) for a specific <strong>provider</strong> (such as <a href="https://www.virtualbox.org/">VirtualBox</a>).<br />
+<p>The <strong>vmr</strong> package allow you to manage <strong>virtual
+environment</strong> with and for <strong>R</strong>.<br />
+You can develop, run tests, build packages binaries easily in a clean
+environment with R pre-installed and configured.</p>
+<p>It uses <a href="https://www.vagrantup.com/">Vagrant</a> tool to
+manage this virtual environments, call <em>boxes</em>. A
+<strong>box</strong> is a Vagrant environment (bundle) containing a
+__virtual environment_ (such as a virtual machine) for a specific
+<strong>provider</strong> (such as <a href="https://www.virtualbox.org/">VirtualBox</a>).<br />
 Official <strong>vmr</strong> boxes list is available here : <a href="https://app.vagrantup.com/VMR/">https://app.vagrantup.com/VMR/</a></p>
 <blockquote>
 <p>Boxes use default user and password: <strong>vagrant</strong>.<br />
-Boxes are available for development and test, do not use it for production.</p>
+Boxes are available for development and test, do not use it for
+production.</p>
 </blockquote>
-<p>Take a <a href="vmrPoster.pdf">quick overview</a> from userR2022 poster presentation.</p>
+<p>Take a <a href="vmrPoster.pdf">quick overview</a> from userR2022
+poster presentation.</p>
 </div>
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
-<p>The <strong>vmr</strong> package needs two tools to work <strong>Vagrant</strong> to manage boxes and a <strong>provider</strong> to instantiate the virtual environment.<br />
+<p>The <strong>vmr</strong> package needs two tools to work
+<strong>Vagrant</strong> to manage boxes and a <strong>provider</strong>
+to instantiate the virtual environment.<br />
 * <strong>Vagrant</strong> (&gt;= 2.2.0) : download and install from <a href="https://www.vagrantup.com/downloads.html">https://www.vagrantup.com/downloads.html</a>.<br />
-* A <strong>provider</strong>, currently only <a href="https://www.virtualbox.org/">VirtualBox</a> (&gt;= 6.1.14) is available in <strong>vmr</strong> boxes. Install it.</p>
+* A <strong>provider</strong>, currently only <a href="https://www.virtualbox.org/">VirtualBox</a> (&gt;= 6.1.14) is
+available in <strong>vmr</strong> boxes. Install it.</p>
 </div>
 <div id="install" class="section level2">
 <h2>Install</h2>
@@ -267,17 +293,21 @@ Boxes are available for development and test, do not use it for production.</p>
 <div id="go-further" class="section level1">
 <h1>Go further</h1>
 <ol style="list-style-type: decimal">
-<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong> package</a></li>
+<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong>
+package</a></li>
 <li><a href="O2-vmrFirstStep.html">Start my first environment</a></li>
-<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong> environment</a></li>
+<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong>
+environment</a></li>
 <li><a href="O4-vmrManageBoxes.html">Manage boxes</a></li>
 <li><a href="O5-vmrManageProviders.html">Manage providers</a></li>
-<li><a href="O6-vmrDev.html">Development with <strong>vmr</strong></a></li>
+<li><a href="O6-vmrDev.html">Development with
+<strong>vmr</strong></a></li>
 <li><a href="O7-vmrcicd.html">CI/CD</a></li>
 <li><a href="O8-vmrResume.html">Functions resume</a></li>
 </ol>
 <div id="next-vignette-2-start-my-first-environment" class="section level3">
-<h3>Next vignette : <a href="O2-vmrFirstStep.html">2-Start my first environment</a></h3>
+<h3>Next vignette : <a href="O2-vmrFirstStep.html">2-Start my first
+environment</a></h3>
 </div>
 </div>
 

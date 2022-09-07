@@ -16,7 +16,7 @@ vmrPackageCheck(pkg = "./")
 Perform a package check into the guest
 }
 \details{
-upload the package and run \code{\link[devtools:check]{devtools::check()}}
+upload the package and run devtools::check()
 into the guest machine. (check available in $HOME/vmr/package/pkg).
 Checking a directory with multiple files may slower upload, prefer tar.gz file
 }

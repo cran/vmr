@@ -14,6 +14,19 @@
 
 <title>6- Use vmr for development</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -35,26 +48,28 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -63,9 +78,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -105,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -321,45 +343,51 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="develop-using-vmr-package" class="section level1">
 <h1>Develop using <strong>vmr</strong> package</h1>
-<p><strong>vmr</strong> environment are clean and setup with R (and some with R-devel), Rtools and some dependencies.</p>
-<p>You can use the GUI or use <strong>vmr</strong> functions to execute commands.</p>
+<p><strong>vmr</strong> environment are clean and setup with R (and some
+with R-devel), Rtools and some dependencies.</p>
+<p>You can use the GUI or use <strong>vmr</strong> functions to execute
+commands.</p>
 <div id="information" class="section level2">
 <h2>Information</h2>
 <p>To get guest information:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">vmrInfo</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrInfo</span>()</span></code></pre></div>
 <p>To send files to guest:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">vmrSend</span>(<span class="kw">c</span>(<span class="st">&quot;myfile1&quot;</span>,<span class="st">&quot;myfile2&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrSend</span>(<span class="fu">c</span>(<span class="st">&quot;myfile1&quot;</span>,<span class="st">&quot;myfile2&quot;</span>))</span></code></pre></div>
 <p>To send and/or run bash commands :</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">vmrProvision</span>(<span class="dt">cmd =</span> <span class="kw">c</span>(<span class="st">&quot;./myscript.sh&quot;</span>), <span class="dt">elts =</span> <span class="kw">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="dt">dest =</span> <span class="st">&quot;/home/vmr/&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrProvision</span>(<span class="at">cmd =</span> <span class="fu">c</span>(<span class="st">&quot;./myscript.sh&quot;</span>), <span class="at">elts =</span> <span class="fu">c</span>(<span class="st">&quot;myscript.sh&quot;</span>), <span class="at">dest =</span> <span class="st">&quot;/home/vmr/&quot;</span>)</span></code></pre></div>
 </div>
 <div id="run-r-commands" class="section level2">
 <h2>Run R commands</h2>
 <p>To execute a R command to guest:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">vmrExec</span>(<span class="kw">c</span>(<span class="st">&#39;print(&quot;HelloWorld&quot;)&#39;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrExec</span>(<span class="fu">c</span>(<span class="st">&#39;print(&quot;HelloWorld&quot;)&#39;</span>))</span></code></pre></div>
 <p>To update and install R packages in guest:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">vmrUpdatePackages</span>()</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">vmrInstallPackages</span>(<span class="dt">pkg =</span> <span class="kw">c</span>(<span class="st">&quot;vmr&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrUpdatePackages</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrInstallPackages</span>(<span class="at">pkg =</span> <span class="fu">c</span>(<span class="st">&quot;vmr&quot;</span>))</span></code></pre></div>
 </div>
 <div id="package-development" class="section level2">
 <h2>Package development</h2>
-<p>With <strong>vmr</strong> you can test, and build a package in development using this functions:</p>
+<p>With <strong>vmr</strong> you can test, and build a package in
+development using this functions:</p>
 <p>To build, check and test:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># check a local package</span></a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="kw">vmrPackageCheck</span>()</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co"># Test it</span></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="kw">vmrPackageTest</span>()</a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="co"># and create archive and package binary</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="kw">vmrPackageBuild</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check a local package</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrPackageCheck</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test it</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrPackageTest</span>()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and create archive and package binary</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrPackageBuild</span>()</span></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>
 <ol style="list-style-type: decimal">
-<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong> package</a></li>
+<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong>
+package</a></li>
 <li><a href="O2-vmrFirstStep.html">Start my first environment</a></li>
-<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong> environment</a></li>
+<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong>
+environment</a></li>
 <li><a href="O4-vmrManageBoxes.html">Manage boxes</a></li>
 <li><a href="O5-vmrManageProviders.html">Manage providers</a></li>
-<li><a href="O6-vmrDev.html">Development with <strong>vmr</strong></a></li>
+<li><a href="O6-vmrDev.html">Development with
+<strong>vmr</strong></a></li>
 <li><a href="O7-vmrcicd.html">CI/CD</a></li>
 <li><a href="O8-vmrResume.html">Functions resume</a></li>
 </ol>

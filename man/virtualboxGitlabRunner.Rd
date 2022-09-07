@@ -15,7 +15,7 @@ virtualboxGitlabRunner(
 \arguments{
 \item{vmr}{a \strong{vmr} object}
 
-\item{gitlab_url}{a GitLab URL}
+\item{gitlab_url}{a GitLab URL with protocol (http or https)}
 
 \item{gt_token}{a GitLab registration token}
 

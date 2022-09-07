@@ -1123,7 +1123,7 @@ vmrProvision <- function(cmd = c(), elts = c(), dest = "") {
 #' @title Perform a package check on guest
 #' @name vmrPackageCheck
 #' @description Perform a package check into the guest
-#' @details upload the package and run [devtools::check()]
+#' @details upload the package and run devtools::check()
 #'  into the guest machine. (check available in $HOME/vmr/package/pkg).  
 #'  Checking a directory with multiple files may slower upload, prefer tar.gz file
 #' @param pkg a package directory or a tar.gz file
@@ -1165,7 +1165,7 @@ vmrPackageCheck <- function(pkg = "./") {
 #' @title Build a package in the guest machine
 #' @name vmrPackageBuild
 #' @description Build a package bundle or binary into the guest machine.
-#' @details upload the package and run [devtools::build()]
+#' @details upload the package and run devtools::build()
 #' (build available in $HOME/vmr/package/pkg) in the current __vmr__ environment.
 #' @param pkg a package directory or a tar.gz file
 #' @param binary if TRUE build binary package otherwise FALSE
@@ -1200,7 +1200,7 @@ vmrPackageBuild <- function(pkg = "./", binary = FALSE) {
 #' @name vmrPackageTest
 #' @description Test a package into a guest machine
 #' @details Perform a package check into the guest machine
-#'  of the current __vmr__ environment using [devtools::test()].
+#'  of the current __vmr__ environment using devtools::test().
 #'  (tests are available in $HOME/vmr/package/pkg)
 #' @param pkg a package directory or tar.gz
 #' @return \code{NULL}

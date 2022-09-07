@@ -14,6 +14,19 @@
 
 <title>7- Use vmr for CI/CD</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -35,26 +48,28 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -63,9 +78,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -105,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -320,11 +342,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#cicd">CI/CD</a><ul>
-<li><a href="#gitlab-runner-cicd">GitLab Runner CI/CD</a></li>
-<li><a href="#snapshot">Snapshot</a></li>
-<li><a href="#vignette-summary">Vignette summary</a><ul>
-<li><a href="#next-vignette-8--functions-resume">Next vignette : <span>8- Functions resume</span></a></li>
+<li><a href="#cicd" id="toc-cicd">CI/CD</a>
+<ul>
+<li><a href="#gitlab-runner-cicd" id="toc-gitlab-runner-cicd">GitLab
+Runner CI/CD</a></li>
+<li><a href="#snapshot" id="toc-snapshot">Snapshot</a></li>
+<li><a href="#vignette-summary" id="toc-vignette-summary">Vignette
+summary</a>
+<ul>
+<li><a href="#next-vignette-8--functions-resume" id="toc-next-vignette-8--functions-resume">Next vignette : <span>8-
+Functions resume</span></a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -332,43 +359,55 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="cicd" class="section level1">
 <h1>CI/CD</h1>
-<p>You can set up a <strong>vmr</strong> environment to use it in CI/CD pipelines.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">vmrStart</span>()</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="co"># do what you want</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</a></code></pre></div>
+<p>You can set up a <strong>vmr</strong> environment to use it in CI/CD
+pipelines.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrStart</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># do what you want</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</span></code></pre></div>
 <div id="gitlab-runner-cicd" class="section level2">
 <h2>GitLab Runner CI/CD</h2>
 <blockquote>
-<p>Using gitlab-runner &gt;= 15.0.0 the option <code>[runners.ssh.disable_strict_host_key_checking]</code> have to be set to <code>true</code>.</p>
+<p>Using gitlab-runner &gt;= 15.0.0 the option
+<code>[runners.ssh.disable_strict_host_key_checking]</code> have to be
+set to <code>true</code>.</p>
 </blockquote>
-<p>Then you can get the command to run, to add it as a GitLab Runner (this will also configure the guest VM) :</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">virtualboxGitlabRunner</span>(vmr_env,</a>
-<a class="sourceLine" id="cb2-2" title="2">                       <span class="dt">gitlab_url =</span> <span class="st">&quot;gitlab.com&quot;</span>,</a>
-<a class="sourceLine" id="cb2-3" title="3">                       <span class="dt">gt_token =</span> <span class="st">&quot;&lt;mytoken&gt;&quot;</span>,</a>
-<a class="sourceLine" id="cb2-4" title="4">                       <span class="dt">snapshot_name =</span> <span class="st">&quot;cicdversionR&quot;</span>,</a>
-<a class="sourceLine" id="cb2-5" title="5">                       <span class="dt">vm_name =</span> <span class="op">&lt;</span>VirtualBox VM Name<span class="op">&gt;</span>)</a></code></pre></div>
-<p>Copy and paste the return command in a terminal where GitLab Runner and the <strong>vmr</strong> environment are installed (be careful with user right on Gitlab Runner and <strong>vmr</strong> environment).</p>
+<p>Then you can get the command to run, to add it as a GitLab Runner
+(this will also configure the guest VM) :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">virtualboxGitlabRunner</span>(vmr_env,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">gitlab_url =</span> <span class="st">&quot;gitlab.com&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">gt_token =</span> <span class="st">&quot;&lt;mytoken&gt;&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">snapshot_name =</span> <span class="st">&quot;cicdversionR&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">vm_name =</span> <span class="sc">&lt;</span>VirtualBox VM Name<span class="sc">&gt;</span>)</span></code></pre></div>
+<p>Copy and paste the return command in a terminal where GitLab Runner
+and the <strong>vmr</strong> environment are installed (be careful with
+user right on Gitlab Runner and <strong>vmr</strong> environment).</p>
 </div>
 <div id="snapshot" class="section level2">
 <h2>Snapshot</h2>
-<p>Once you set up your <strong>vmr</strong> environment and configure CI/CD take a snapshot of it (snapshot name as to be the same as given into <em>virtualboxGitlabRunner</em>).</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">vmrStop</span>()</a></code></pre></div>
+<p>Once you set up your <strong>vmr</strong> environment and configure
+CI/CD take a snapshot of it (snapshot name as to be the same as given
+into <em>virtualboxGitlabRunner</em>).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrTakeSnapshot</span>(<span class="st">&quot;cicdversionR&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vmrStop</span>()</span></code></pre></div>
 </div>
 <div id="vignette-summary" class="section level2">
 <h2>Vignette summary</h2>
 <ol style="list-style-type: decimal">
-<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong> package</a></li>
+<li><a href="O1-workwithvmr.html">Working with <strong>vmr</strong>
+package</a></li>
 <li><a href="O2-vmrFirstStep.html">Start my first environment</a></li>
-<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong> environment</a></li>
+<li><a href="O3-vmrManagevmr.html">Manage <strong>vmr</strong>
+environment</a></li>
 <li><a href="O4-vmrManageBoxes.html">Manage boxes</a></li>
 <li><a href="O5-vmrManageProviders.html">Manage providers</a></li>
-<li><a href="O6-vmrDev.html">Development with <strong>vmr</strong></a></li>
+<li><a href="O6-vmrDev.html">Development with
+<strong>vmr</strong></a></li>
 <li><a href="O7-vmrcicd.html">CI/CD</a></li>
 <li><a href="O8-vmrResume.html">Functions resume</a></li>
 </ol>
 <div id="next-vignette-8--functions-resume" class="section level3">
-<h3>Next vignette : <a href="O8-vmrResume.html">8- Functions resume</a></h3>
+<h3>Next vignette : <a href="O8-vmrResume.html">8- Functions
+resume</a></h3>
 </div>
 </div>
 </div>
