@@ -21,15 +21,15 @@
 # @description Displays some information about the package
 # @importFrom utils packageVersion
 getInfo <- function() {
-  message("Package: vmr | Virtual Machines for R")
-  message("Author: Jean-Fran\u00E7ois Rey <jf.rey.public@gmail.com>")
-  message("Version: ", appendLF = FALSE)
-  message(utils::packageVersion("vmr"))
-  message("License: GPLV3")
-  message("'vmr' package is under development")
-  message("Be comprehensible and feedback are welcome.")
-  message("Do not use virtual machine for production!")
-  message("Enjoy!")
+  packageStartupMessage("Package: vmr | Virtual Machines for R")
+  packageStartupMessage("Author: Jean-Fran\u00E7ois Rey <jf.rey.public@gmail.com>")
+  packageStartupMessage("Version: ", appendLF = FALSE)
+  packageStartupMessage(utils::packageVersion("vmr"))
+  packageStartupMessage("License: GPLV3")
+  packageStartupMessage("'vmr' package is under development")
+  packageStartupMessage("Be comprehensible and feedback are welcome.")
+  packageStartupMessage("Do not use virtual machine for production!")
+  packageStartupMessage("Enjoy!")
 }
 
 # @title Check package dependencies
@@ -39,8 +39,8 @@ getInfo <- function() {
 .checkDependencies <- function() {
   res <- vagrantIsInstalled()
   if (!is.null(res) && nzchar(res$vagrant_bin) && grepl("[0-9\\.]+", res$version)) {
-    message(paste0("vagrant path: ", res$vagrant_bin))
-    message(paste0("vagrant version: ", res$version))
+    packageStartupMessage(paste0("vagrant path: ", res$vagrant_bin))
+    packageStartupMessage(paste0("vagrant version: ", res$version))
   }
   ## TODO Virtualbox or providers check
 }

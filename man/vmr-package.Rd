@@ -16,8 +16,8 @@ Develop, test and build package in a clean environment.
 \tabular{ll}{
 Package: \tab vmr\cr
 Type: \tab Package\cr
-Version: \tab 0.0.5\cr
-Date: \tab 2022-09-07\cr
+Version: \tab 0.0.6\cr
+Date: \tab 2023-03-07\cr
 License: \tab GPL (>=3)\cr
 }
 

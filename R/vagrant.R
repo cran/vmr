@@ -368,7 +368,7 @@ vagrantIsInstalled <- function() {
       version <- substr(out[1], pos_value, pos_value + attr(pos_value, "match.length"))
     }
   } else {
-    message(
+    packageStartupMessage(
       "Vagrant seems not to be installed.\n",
       "Please visit the page below and download and install vagrant: \n",
       "https://www.vagrantup.com/downloads.html\n"
